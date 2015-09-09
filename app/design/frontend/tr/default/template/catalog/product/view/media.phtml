@@ -1,0 +1,87 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_modern
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product media data template
+ *
+ * @see Mage_Catalog_Block_Product_View_Media
+ */
+?>
+<?php
+    $_product = $this->getProduct();
+    $_helper = $this->helper('catalog/output');
+	$_imgHelper = $this->helper('catalog/image');
+	
+	$image = $_product->getImage();
+	
+	$_largeImageSize = 300;
+	$_zoomImageSize = 900;	
+	$_thumbnailImageSize = 90;	
+	
+	//Zoom Image Check Variables
+	/*
+	$_originalImageWidth = $this->helper('catalog/image')->init($_product, 'image')->getOriginalWidth();
+	$_originalImageHeight = $this->helper('catalog/image')->init($_product, 'image')->getOriginalHeight();
+	
+	$_originalRatio = $_originalImageWidth / $_originalImageHeight;
+	$_originalIsSquare = (($_originalRatio == 1) ? true : false);
+	
+	$_useImageZoom = (($image != 'no_selection' && $image && $_originalImageWidth > $_largeImageSize && $_originalIsSquare) ? true : false);
+	*/	
+?>
+<p class="product-image">
+    <a href='<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize($_zoomImageSize); ?>' class='cloud-zoom' id='zoom1'
+        rel="position: 'inside', softFocus: true, adjustX:'-1', adjustY:' -1'">
+		<?php
+            $_img = '<img id="image" src="'.$this->helper('catalog/image')->init($_product, 'image')->resize($_largeImageSize).'" alt="'.$this->htmlEscape($this->getImageLabel()).'" title="'.$this->htmlEscape($this->getImageLabel()).'" />';
+            echo $_helper->productAttribute($_product, $_img, 'image');
+        ?>
+    </a>
+</p>
+<?php if (count($this->getGalleryImages()) > 0): ?>
+<div class="more-views">
+    <ul>
+    	<!-- main image -->
+        <li>                
+
+            <a href="<?php echo $this->helper('catalog/image')->init($_product, 'image'); ?>" class="cloud-zoom-gallery" title="<?php echo $this->htmlEscape($this->getImageLabel()); ?>"
+            rel="useZoom: 'zoom1', smallImage: '<?php echo $this->helper('catalog/image')->init($_product, 'image')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize($_largeImageSize); ?>', adjustX:'20', adjustY:' -20'">
+			<?php
+            $_img = '<img src="'.$this->helper('catalog/image')->init($_product, 'image')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize($_thumbnailImageSize).'" alt="'.$this->htmlEscape($this->getImageLabel()).'" title="'.$this->htmlEscape($this->getImageLabel()).'" />';
+            echo $_helper->productAttribute($_product, $_img, 'image'); ?></a>
+    	</li>
+        <!-- end main image -->
+    <?php $i = 2; ?>
+    <?php foreach ($this->getGalleryImages() as $_image): ?>
+    	<?php $_imageHelper = $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile()); ?>
+        <li<?php if(($i % 3) == 0) : ?> class="last"<?php endif;?>>                
+            <a href="<?php echo $_imageHelper; ?>" class="cloud-zoom-gallery" title="<?php echo $this->htmlEscape($_image->getLabel()) ?>"
+            rel="useZoom: 'zoom1', smallImage: '<?php echo $_imageHelper->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize($_largeImageSize); ?>'"><img src="<?php echo $_imageHelper->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize($_thumbnailImageSize); ?>" alt="<?php echo $this->htmlEscape($_image->getLabel()) ?>" /></a>
+        </li>
+    <?php $i++; endforeach; ?>
+    </ul>
+</div>
+<?php endif; ?>

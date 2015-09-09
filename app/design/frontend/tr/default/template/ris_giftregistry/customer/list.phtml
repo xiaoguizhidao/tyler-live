@@ -1,0 +1,111 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this RIS_GiftRegistry_Block_Customer_Giftregistry_List */
+
+// @see http://webdesignerwall.com/tutorials/cross-browser-html5-placeholder-text
+?>
+<?php if ($this->helper('ris_giftregistry')->isAllow()) : ?>
+<div class="customer-gift-registry-list">
+    <div class="page-title title-buttons">
+        <h1><?php echo $this->__('My Gift Registries') ?></h1>
+        <div class="buttons-set-top">
+            <button type="button" class="button btn-orange btn-new" title="<?php echo $this->__('Create New Registry') ?>" onclick="setLocation('<?php echo $this->escapeUrl($this->helper('ris_giftregistry')->getNewUrl()) ?>')"><span><span><?php echo $this->__('Create New Registry') ?></span></span></button>
+            <button type="button" class="button btn-find" title="<?php echo $this->__('Find a Registry') ?>" onclick="setLocation('<?php echo $this->escapeUrl($this->helper('ris_giftregistry')->getFindUrl()) ?>')"><span><span><?php echo $this->__('Find a Registry') ?></span></span></button>
+        </div>
+    </div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <?php if ($this->hasGiftRegistries()): ?>
+        <table class="data-table" id="giftregistry-table">
+        <col />
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
+        <col />
+            <thead>
+                <tr>
+                    <th><?php echo $this->__('Registry') ?></th>
+                    <th class="a-left"><span class="nobr"><?php echo $this->__('Expires on') ?></span></th>
+                    <th class="a-left"><span class="nobr"><?php echo $this->__('Item Summary') ?></span></th>
+                    <th class="a-left"><span class="nobr"><?php echo $this->__('Total Contributors') ?></span></th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($this->getGiftRegistries() as $_gift_registry): ?>
+            <?php $is_expired = ($_gift_registry->getId() != Mage::getSingleton('ris_giftregistry/session')->getActiveGiftRegistryId() ? true : false); ?>
+                <tr<?php if($is_expired): ?> class="gift-registry-expired"<?php endif; ?>>
+                    <td class="a-left">
+                        <p class="gift-registry-title"><a href="<?php echo $this->escapeUrl($this->helper('ris_giftregistry')->getViewUrl(array('gr_id'=>$_gift_registry->getId()))) ?>"><?php echo $this->escapeHtml($_gift_registry->getTitle()) ?></a></p>
+                        <p class="gift-registry-type"><span class="nobr gift-registry-type-<?php echo $_gift_registry->getType();?>"><?php echo $this->__('%s Registry', ucfirst($_gift_registry->getType())) ?></span></p>
+                    </td>
+                    <td class="a-left nobr">
+                        <p>
+                            <?php echo $this->getFormatedDate($_gift_registry->getData('expires_on')) ?>
+                            <?php if($_gift_registry->isExpired()):?><br /><span class="expired"><?php echo $this->__('Expired') ?></span><?php endif?>
+                        </p>
+                        
+                    </td>
+                    <td class="a-left nobr">
+                        <p class="items_numbers">
+                            <span><?php echo $this->__(($_gift_registry->getAllItemCollection()->getItemsQty() == 1 ? '%s item' : '%s items'),$_gift_registry->getAllItemCollection()->getItemsQty()) ?></span><br />
+                            <span><?php echo $this->__('%s purchased',$_gift_registry->getAllItemCollection()->getItemsPurchasedQty()) ?></span><br />
+                            <span><?php echo $this->__('%s remaining', $_gift_registry->getAllItemCollection()->getItemsRemainingQty()) ?></span>
+                        </p>
+                    </td>
+                    <td class="a-left nobr">
+                        <p>
+                            <span class="contributors_number"><?php echo $this->__(($_gift_registry->getContributorsCount() == 1 ? '%s Contributor' : '%s Contributors'), $_gift_registry->getContributorsCount()) ?></span>
+                            <?php if($_gift_registry->getContributorsCount()): ?>
+                                <br /><span class="contributors_name_list"><?php echo $_gift_registry->getContributorsNameList('string', 4); ?></span>
+                                <?php if($_gift_registry->getContributorsCount() > 4): ?>
+                                    <span><?php echo $this->__('...'); ?></span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </p>
+                    </td>
+                    <td valign="middle" class="a-right nobr">
+                    	<?php if(!$is_expired): ?>
+                        <button type="button" title="<?php echo $this->__('Share') ?>" class="button btn-share" onclick="return GiftRegistry.AjaxModel.showShareModal('<?php echo $this->escapeHtml($_gift_registry->getTitle()) ?>', <?php echo $_gift_registry->getId() ?>);"><span><span><?php echo $this->__('Share') ?></span></span></button>
+                        <?php endif; ?>
+                        <button type="button" title="<?php echo $this->__('Edit') ?>" class="button btn-edit2" onclick="setLocation('<?php echo $this->escapeUrl($this->helper('ris_giftregistry')->getEditUrl(array('gr_id'=>$_gift_registry->getId()))) ?>')"><span><span><?php echo $this->__('Edit') ?></span></span></button>
+                        <button type="button" title="<?php echo $this->__('Delete') ?>" class="button btn-delete" onclick="setLocation('<?php echo $this->escapeUrl($this->helper('ris_giftregistry')->getDeleteUrl(array('gr_id'=>$_gift_registry->getId()))) ?>')"><span><span><?php echo $this->__('Delete') ?></span></span></button>
+                    </td>
+                </tr>
+            <?php endforeach ?>
+            </tbody>
+        </table>
+        <script type="text/javascript">decorateTable('giftregistry-table')</script>
+        <div class="buttons-set buttons-set-bottom-left" style="text-align: left;">
+            <button type="button" class="button btn-new" title="<?php echo $this->__('Create New Registry') ?>" onclick="setLocation('<?php echo $this->escapeUrl($this->helper('ris_giftregistry')->getNewUrl()) ?>')"><span><span><?php echo $this->__('Create New Registry') ?></span></span></button>
+            <button type="button" class="button btn-find" title="<?php echo $this->__('Find a Registry') ?>" onclick="setLocation('<?php echo $this->escapeUrl($this->helper('ris_giftregistry')->getFindUrl()) ?>')"><span><span><?php echo $this->__('Find a Registry') ?></span></span></button>
+        </div>
+    <?php else: ?>
+        <?php 
+            $link_new = '<a href="'.$this->escapeUrl($this->helper('ris_giftregistry')->getNewUrl()).'">';
+            $link_find = '<a href="'.$this->escapeUrl($this->helper('ris_giftregistry')->getFindUrl()).'">';
+            
+            $empty_message = $this->__("You haven't created a registry yet. Get started by [link_new]creating a registry[/link_new] or [link_find]find a registry[/link_find].");
+            
+            $empty_message = str_replace('[link_new]', $link_new, $empty_message);
+            $empty_message = str_replace('[/link_new]', '</a>', $empty_message);
+            
+            $empty_message = str_replace('[link_find]', $link_find, $empty_message);
+            $empty_message = str_replace('[/link_find]', '</a>', $empty_message);
+        ?>
+        <p class="empty-gift-registry-list"><?php echo $empty_message; ?></p>
+    <?php endif ?>
+</div>
+<?php endif ?>

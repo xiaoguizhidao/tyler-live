@@ -1,0 +1,142 @@
+#popupStoreFilter, #popupChangeShippingFilter{
+    min-height: 250px;
+}
+#popupStoreFilter, #popupChangeShippingFilter{
+    background-color: #FFFFFF;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 25px 5px #999999;
+    color: #111111;
+    display: none;
+    width: 650px;
+    padding: 25px;
+    display: none;
+}
+
+#popupStoreFilter p,  
+#popupChangeShippingFilter p{
+    padding: 10px;
+}
+
+#popupStoreFilter select, 
+#popupChangeShippingFilter select{
+
+}
+
+#popupStoreFilter input, 
+#popupChangeShippingFilter input {
+
+}
+
+#popupStoreFilter input.checkbox, 
+#popupChangeShippingFilter input.checkbox {
+    width: auto;
+}
+
+#popupStoreFilter fieldset label, 
+#popupChangeShippingFilter fieldset label{ display: block; }
+
+#popupStoreFilter .button, 
+#popupChangeShippingFilter .button {}
+
+
+#selection-filter { text-align: center; }
+#selection-filter .button { width: 255px; }
+#selection-filter fieldset .input-box { display: inline-block; margin-bottom: 30px; }
+#selection-filter fieldset .input-box input { width: 255px; }
+#selection-filter fieldset .input-box .validation-advice { text-align: left; }
+
+#popupStoreFilter .store-msg {
+    margin: 20px 0 0;
+}
+
+#popupStoreFilter #popup-loading-option, 
+#popupChangeShippingFilter #popup-loading-option{
+    padding: 10px;
+    display: block;
+}
+
+#popupStoreFilter #popup-loading, 
+#popupChangeShippingFilter #popup-loading{
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -15px;
+    margin-left: -15px;
+}
+
+#popupStoreFilter .button.bClose, 
+#popupChangeShippingFilter .button.bClose{
+    border-radius: 7px 7px 7px 7px;
+    box-shadow: none;
+    font: bold 131% sans-serif;
+    padding: 0 6px 2px;
+    position: absolute;
+    right: -7px;
+    top: -7px;
+    background-color: #2B91AF;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+
+#popupStoreFilter .button.bClose > span, 
+#popupChangeShippingFilter .button.bClose > span {
+    font-size: 84%;
+}
+
+.find-store .content { min-height:255px; padding:14px 21px; background:#faf7ee url(../../images/storelocations/bkg_store-box.gif) 0 0 repeat-x; border:1px solid #bbb6a5; border-bottom:0; }
+.find-store .content h2 { font-weight:bold; font-size:13px; margin:0 0 14px; padding:0 0 5px 0; border-bottom:1px solid #ddd; background-position:0 1px; background-repeat:no-repeat; text-transform:uppercase; color:#e76200; }
+.find-store .buttons-set { border:1px solid #bbb6a5; border-top:0; margin:0; padding:8px 13px; background:#dee5e8 url(../../images/storelocations/bkg_buttons-set1.gif) 0 0 repeat-x; }
+.stores-map { clear: both; margin: 25px 0 0; }
+.storelocation-map { display: block; margin: 0 auto; }
+
+#stateLinkContainer{float:left; clear:both; padding: 0; width:100%;}
+#stateLinkContainer h4{ padding: 10px 0 5px; text-align: center; border-bottom:1px solid #CCCCCC; }
+#stateLinkContainer ul{ width: 60%; padding: 0 20%; text-align: center;}
+#stateLinkContainer li{ display:inline-block;  width: 33%;/*float: left;*/ text-align: center;}
+
+#storeLocatorResults { padding: 20px 0 0; /*float: left; width:560px;*/}
+#storeLocatorResults h3{float:left; width: 46.5%; padding: 1%; background: #DEE5E8; border:1px solid #BBB6A5;}
+#storeLocatorResults #storeBlock-container{ float: left; width:48.5%;}
+#storeLocatorResults #storeBlock-container .storeBlock{ float: left; width:48%; padding: 1%;}
+#storeLocatorResults .more-info{color:#DC6809;}
+#storeLocatorResults .google-map{ float: right; width:48.5%;}
+
+#storeLocatorBlock { background: #f6f6f6; padding: 20px; }
+#storeLocatorBlock #GoogleMap_div{float: right;}
+#storeLocatorBlock #store-details{float: left; width:48.5%; min-height: 400px; height:auto!important; height:400px; background:#faf7ee url(../../images/storelocations/bkg_store-box.gif) 0 0 repeat-x; border:1px solid #bbb6a5;}
+
+#storeLocatorBlock #pickup-details{}
+#storeLocatorBlock #pic-and-info{}
+#storeLocatorBlock #banner_storefront{ text-align: center;}
+#storeLocatorBlock #banner_storefront span img{}
+#storeLocatorBlock #address_block{}
+#storeLocatorBlock #address_block p { margin-bottom: 10px; }
+/* Tabs */
+#storeLocatorBlock #store-more-info{ float: left; clear: both; padding: 20px 0 0; width:100%;}
+#storeLocatorBlock #store-more-info .tabs{padding:0 20px;}
+#storeLocatorBlock #store-more-info .tabs li {display: inline-block;}
+#storeLocatorBlock #store-more-info .tabs li a{padding:5px 10px; display: inline-block; background:#618499; border:1px solid #bbb6a5; border-width: 1px 1px 0; font-weight: 700; text-decoration: none; color: #fff;}
+#storeLocatorBlock #store-more-info .tabs li a:hover{background-color:#E2E9EB; color: #618499;}
+#storeLocatorBlock #store-more-info .tabs .active a,#storeLocatorBlock #store-more-info .tabs .active a:hover{background-color:#faf7ee; color: #000; border-color: #bbb6a5; }
+#storeLocatorBlock #store-more-info .tab-content{display:none; background:#faf7ee url(../../images/storelocations/bkg_store-box.gif) 0 0 repeat-x; border:1px solid #bbb6a5; padding: 10px;} 
+#storeLocatorBlock #store-more-info .tab-content.on{display:block;}
+
+#storeLocatorBlock .tab-content table td{width:33%; text-align: center; line-height: 2em;}
+#storeLocatorBlock .tab-content table td:first-child{text-align: left; width: 20%}
+#storeLocatorBlock .tab-content table tr:nth-child(even) {background: #F1EDDF;}
+/*#storeLocatorBlock .tab-content table tr:nth-child(odd) {background: #FFF}*/
+/*#storeLocatorBlock .tab-content table thead tr{border-bottom: 1px solid #bbb6a5;}*/
+#storeLocatorBlock .tab-content table th{ font-weight: 700; font-size: 1.2em;text-align: center;border-bottom: 1px solid #bbb6a5;}
+
+#storeLocatorBlock #team table{margin:0 auto; width:100%;}
+#storeLocatorBlock #team td, #storeLocatorBlock #team th{width:50%; text-align: center;}
+
+.msg-store-checkout { border-color: #D9DDE3; border-style: solid; border-width: 0 1px 1px; padding: 20px 30px 10px; }
+.msg-store-checkout .messages { margin-bottom: -10px; }
+
+.opc .pickup-buttons-set { padding: 0 0 30px 0; text-align: left; }
+.opc .pickup-buttons-set button.button { float: none; }

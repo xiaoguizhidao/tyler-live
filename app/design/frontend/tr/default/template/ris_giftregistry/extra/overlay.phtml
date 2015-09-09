@@ -1,0 +1,64 @@
+<div id="tlgr_overlay" class="tlgr-overlay" style="display: none;"></div>
+<div id="tlgr_loader" class="tlgr-loader" style="display: none;"></div>
+<div id="tlgr-modal-notice" class="tlgr-modal" style="display: none;">
+    <a href="javascript:void(0);" class="tlgr-modal-close" onclick="GiftRegistry.AjaxModel.hideModal(); return false;" title="<?php echo $this->__('Close'); ?>"></a>
+    <div class="tlgr-modal-message" id="tlgr-modal-notice-messages"></div>
+    <div class="buttons-set">
+        <button type="button" title="<?php echo $this->__('Close'); ?>" onclick="GiftRegistry.AjaxModel.hideModal(); return false;" class="button btn-close"><span><span><?php echo $this->__('Close'); ?></span></span></button>
+    </div>
+</div>
+<div id="tlgr-update-description-popup-ajaxLoading" class="tlgr-modal" style="display: none;"></div>
+<div id="tlgr-share-popup-ajaxLoading" class="tlgr-modal" style="display: none;">
+    <a href="javascript:void(0);" class="tlgr-modal-close" onclick="GiftRegistry.AjaxModel.hideModal(); return false;" title="<?php echo $this->__('Close'); ?>"></a>
+    <div class="tlgr-modal-title">
+        <h1><?php echo $this->__('Share My Gift Registry'); ?></h1>
+        <h2 id="tlgr-share-popup:title">&nbsp;</h2>
+    </div>
+    <div class="tlgr-modal-message" id="tlgr-share-popup-messages"></div>
+    <form class="tlgr-form" action="javascript:void(0);" id="tlgr-share-form">
+        <input type="hidden" name="gr_id" id="tlgr-share-popup:gr_id" value="" />
+        <div class="fieldset">
+            <ul class="form-list">
+                <li class="fields">
+                    <div class="field">
+                        <label for="tlgr-share-popup:emails"><?php echo $this->__('Email Receipients'); ?></label>
+                        <input id="tlgr-share-popup:emails" name="emails" class="input-text validate-emails required-entry" />
+                        <div class="tip"><?php echo $this->__('Enter a ( , ) comma separated list of email receipients.'); ?></div>
+                    </div>
+                </li>
+                <li class="fields">
+                    <div class="field">
+                        <label for="tlgr-share-popup:message"><?php echo $this->__('Email Message'); ?></label>
+                        <textarea id="tlgr-share-popup:message" name="message" cols="20" rows="10"></textarea>
+                        <div class="tip"><?php echo $this->__('A brief message that will be sent in the email your receipients receive.'); ?></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="buttons-set">
+            <button type="submit" title="<?php echo $this->__('Share My Gift Registry') ?>" class="button btn-orange" onclick="GiftRegistry.AjaxModel.callAjax(this, '<?php echo $this->getUrl('giftregistry/index/send_ajax') ?>', 'tlgr-share-form', false); return false;"><span><span><?php echo $this->__('Share My Gift Registry') ?></span></span></button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+Validation.addAllThese([
+    ['validate-emails', '<?php echo $this->__('Please enter a valid email addresses, separated by commas. For example johndoe@domain.com, johnsmith@domain.com.') ?>', function (v) {
+    if(Validation.get('IsEmpty').test(v)) {
+        return true;
+    }
+
+    var valid_regexp = /^[a-z0-9\._-]{1,30}@([a-z0-9_-]{1,30}\.){1,5}[a-z]{2,4}$/i;
+    var emails = v.split(',');
+
+    for (var i=0; i<emails.length; i++) {
+        if(!valid_regexp.test(emails[i].strip())) {
+            return false;
+        }
+    }
+
+    return true;
+    }]
+]);
+//]]>
+</script>

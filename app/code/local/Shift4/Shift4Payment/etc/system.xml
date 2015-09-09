@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category	Shift4
+ * @package		Shift4_Shift4Payment
+ * @copyright	Copyright (c) 2011 Shift4 Corporation (http://www.shift4.com)
+ * @license		http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+	<sections>
+		<payment>
+			<groups>
+				<shift4payment module="paygate">
+					<label>Shift4 Secure Payments</label>
+					<comment>
+						<![CDATA[
+							<br />
+							<div class="custom-options">
+								<div class="box">
+									<br />
+									<p class="grand-total"><img src="https://www.shift4.com/images/magento/shift4.png" /></p>
+									<a href="http://www.shift4.com/magento_merchant" target="_blank">Click here to learn more about Shift4</a>
+									<br />
+									<span style="float: right; color: #888888; font-size: .9em;">Version 1.0.2a</span>
+									<br />
+								</div>
+							</div>
+						]]>
+					</comment>
+					<sort_order>670</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>0</show_in_store>
+					<fields>
+						<active>
+							<label>Enabled</label>
+							<comment>Enable Shift4 module to accept and process credit card payments.</comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</active>
+						<title>
+							<label>Title</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>2</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</title>
+						<demo_mode>
+							<label>Processing Mode</label>
+							<comment>
+								<![CDATA[
+									"Demo" mode allows you to test the module without entering any settings or creating any Shift4 accounts.
+									While in "Demo" mode, transactions will be sent to a demo processor.
+									Demo transactions will not be viewable in Dollars on the Net.<br />
+									While in "Live" mode, transactions will be sent to a live processor. Live transactions will be viewable at
+									<a href="http://www.dollarsonthenet.net">http://www.dollarsonthenet.net</a>.
+								]]>
+							</comment>
+							<frontend_type>select</frontend_type>
+							<source_model>shift4payment/config_DemoMode</source_model>
+							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</demo_mode>
+						<i4go_account_id>
+							<label>i4Go Account ID</label>
+							<comment>Your i4Go account ID provided by Shift4.</comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>4</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</i4go_account_id>
+						<i4go_site_id>
+							<label>i4Go Site ID</label>
+							<comment>Your i4Go site ID provided by Shift4.</comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>5</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</i4go_site_id>
+						<account_number>
+							<label>Account Number</label>
+							<comment>Your Account Number provided by Shift4.</comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>6</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</account_number>
+						<api_username>
+							<label>API Username</label>
+							<comment>Your API username provided by Shift4.</comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>7</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</api_username>
+						<api_password>
+							<label>API Password</label>
+							<comment>Your API password provided by Shift4.</comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>8</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</api_password>
+						<merchant_id>
+							<label>Merchant ID</label>
+							<comment>Your Merchant ID provided by Shift4.</comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>9</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</merchant_id>
+						<enforce_address>
+							<label>Enforce Address Validation</label>
+							<comment>
+								Set to "Yes" to automatically void the transaction and cancel the order if shopper's payment information fails
+								the address validation. The shopper will be returned to the payment page with an error message.
+							</comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</enforce_address>
+						<transaction_mode>
+							<label>Transaction Mode</label>
+							<comment>
+								<![CDATA[
+									"Immediate Charge" authorizes and finalizes the transaction. "Book and Ship" authorizes the funds
+									and will allow you to manually settle the transaction at
+									<a href="http://www.dollarsonthenet.net">http://www.dollarsonthenet.net</a>.<br />
+									The "Book and Ship" option is often used when a merchant bills the shopper after shipment.
+									Settlements should be done within a limited number of days of the original authorization to avoid
+									expiration of the authorization hold.
+								]]>
+							</comment>
+							<frontend_type>select</frontend_type>
+							<source_model>shift4payment/config_TransactionMode</source_model>
+							<sort_order>11</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</transaction_mode>						
+						<log_mode>
+							<label>Enable Logging</label>
+							<comment>
+								This setting controls logging of gateway communications data to a file.
+								It can be set to log problem communications only, or all communications with the gateway.
+								The log files will be stored in the Magento /var/log/ folder, named Shift4.log and Shift4-error.log.
+							</comment>
+							<frontend_type>select</frontend_type>
+							<source_model>shift4payment/config_LogMode</source_model>
+							<sort_order>12</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</log_mode>
+					</fields>
+				</shift4payment>
+			</groups>
+		</payment>
+	</sections>
+</config>

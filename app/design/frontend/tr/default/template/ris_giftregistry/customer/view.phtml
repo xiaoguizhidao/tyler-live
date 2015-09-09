@@ -1,0 +1,212 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this RIS_GiftRegistry_Block_Customer_Giftregistry */
+
+// @see http://webdesignerwall.com/tutorials/cross-browser-html5-placeholder-text
+?>
+<?php if ($this->helper('ris_giftregistry')->isAllow()) : ?>
+<div class="gift-registry">
+    <div class="page-title">
+        <h1 style="float: left;"><?php echo $this->escapeHtml($this->getGiftRegistry()->getTitle()) ?></h1>
+        <div class="buttons-set-top-left title-buttons" style="float: left;">
+            <button type="button" title="<?php echo $this->__('Edit') ?>" class="button" onclick="setLocation('<?php echo $this->escapeUrl($this->helper('ris_giftregistry')->getEditUrl()) ?>')"><span><span><?php echo $this->__('Edit') ?></span></span></button>
+            <button type="button" title="<?php echo $this->__('Share') ?>" class="button btn-orange" onclick="return GiftRegistry.AjaxModel.showShareModal('<?php echo $this->escapeHtml($this->getGiftRegistry()->getTitle()) ?>', <?php echo $this->getGiftRegistry()->getId() ?>);"><span><span><?php echo $this->__('Share') ?></span></span></button>
+        </div>
+        <div class="buttons-set-top-right title-buttons" style="float: right;">
+            <button type="button" title="<?php echo $this->__('Back to My Gift Registries') ?>" class="button" onclick="setLocation('<?php echo $this->escapeUrl($this->helper('ris_giftregistry')->getListUrl()) ?>')"><span><span><small>&laquo; </small><?php echo $this->__('Back to My Gift Registries') ?></span></span></button>
+        </div>
+        <p class="sub-title" style="font-size: 12px;">
+            <span class="gift-registry-type-<?php echo $this->getGiftRegistry()->getType();?>"><?php echo $this->__('%s Registry', ucfirst($this->getGiftRegistry()->getType())) ?></span>
+            <span class="separator">|</span> 
+            <?php if($this->getGiftRegistry()->isExpired()):?>
+                <span class="expired" style="color:#FF0000;"><?php echo $this->__('Expired on %s', $this->getFormatedDate($this->getGiftRegistry()->getData('expires_on'))) ?></span>
+            <?php else:?>
+                <span class="expires_on"><?php echo $this->__('Expires on %s', $this->getFormatedDate($this->getGiftRegistry()->getData('expires_on'))) ?></span>
+            <?php endif; ?>
+        </p>
+    </div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    
+    <?php if($this->getGiftRegistry()->getDescription()):?>
+    <p class="gift-registry-desc">
+        <span class="title" style="font-weight: bold;"><?php echo $this->__('Description') ?></span>
+        <br /><?php echo nl2br($this->escapeHtml($this->getGiftRegistry()->getDescription())) ?>
+    </p>
+    <?php endif; ?>
+    
+    <h2><?php echo $this->__('Available Products') ?></h2>
+    <?php if ($this->hasGiftRegistryItems()): ?>
+    <form id="giftregistry-view-form" class="clearer" action="<?php echo $this->getUrl('*/*/update') ?>" method="post">
+        <fieldset>
+
+            <?php echo $this->getBlockHtml('formkey')?>
+            <table class="data-table" id="giftregistry-table">
+            <col width="1" />
+            <col width="1" />
+            <col />
+            <col width="1" />
+            <col width="1" />
+            <col width="1" />
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th><?php echo $this->__('Product Name') ?></th>
+                        <th><?php echo $this->__('Messages') ?></th>
+                        <th class="a-center"><span class="nobr"><?php echo $this->__('Unit Prices') ?></span></th>
+                        <th class="a-center"><span class="nobr"><?php echo $this->__('QTY') ?></span></th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($this->getGiftRegistryItems() as $item): ?>
+                    <?php
+                        $product = $item->getProduct();
+                        $isVisibleProduct = $product->isVisibleInSiteVisibility();
+                    ?>
+                    <tr>
+                        <td>
+
+                            <a class="product-image" href="<?php echo $this->getProductUrl($item) ?>" title="<?php echo $this->escapeHtml($product->getName()) ?>"><img src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(113, 113); ?>" width="113" height="113" alt="<?php echo $this->escapeHtml($product->getName()) ?>" /></a>
+                        </td>
+                        <td>
+                            <h2 class="product-name"><a href="<?php echo $this->getProductUrl($item) ?>"><?php echo $this->escapeHtml($product->getName()) ?></a></h2>
+                            <?php echo $this->getDetailsHtml($item) ?>
+                        </td>
+                        <td>
+                            <textarea class="textarea" name="description[<?php echo $item->getGiftRegistryItemId() ?>]" rows="3" cols="5" placeholder="<?php echo $this->helper('ris_giftregistry')->defaultCommentString() ?>" title="<?php echo $this->__('Comment') ?>"><?php echo $this->getCommentValue($item); ?></textarea>
+                        </td>
+                        <td class="a-right">
+                            <?php echo $this->getPriceHtml($product) ?>
+                        </td>
+                        <td class="a-center">
+                        <?php if ($item->canHaveQty() && $isVisibleProduct): ?>
+                            <p><input type="text" class="input-text qty" name="qty[<?php echo $item->getId() ?>]" value="<?php echo $this->getAddToCartQty($item) * 1 ?>" /></p>
+                        <?php endif; ?>
+                            <?php if ($isVisibleProduct): ?>
+                            <p><a href="<?php echo $this->getItemConfigureUrl($item) ?>"><?php echo $this->__('Edit') ?></a></p>
+                            <?php endif ?>
+                        </td>
+                        <td>
+                            <a href="<?php echo $this->getItemRemoveUrl($item) ?>" title="<?php echo $this->__('Remove Item') ?>" onclick="return confirmRemoveGiftRegistryItem();" class="btn-remove btn-remove2"><?php echo $this->__('Remove item')?></a>
+                        </td>
+                    </tr>
+                <?php endforeach ?>
+                </tbody>
+            </table>
+            <script type="text/javascript">decorateTable('giftregistry-table')</script>
+            <div class="buttons-set buttons-set2">
+                <button type="submit" style="display: none;" onclick="this.name='save_and_share'" title="<?php echo $this->__('Share Gift Registry') ?>" class="button btn-share btn-orange"><span><span><?php echo $this->__('Share Gift Registry') ?></span></span></button>
+                <button type="submit" title="<?php echo $this->__('Update Gift Registry') ?>" onclick="this.name='do'" class="button btn-update"><span><span><?php echo $this->__('Update Gift Registry') ?></span></span></button>
+            </div>
+        </fieldset>
+    </form>
+    <?php else: ?>
+        <p><?php echo $this->__('Your available product list is empty.') ?></p>
+    <?php endif ?>
+
+    
+    <?php if ($this->hasGiftRegistryPurchasedItems()): ?>
+        <div class="clearer"></div>
+        
+        <div class="purchased-items-list">
+            <div style="height: 15px;"></div>
+            <h2><?php echo $this->__('Purchased Products') ?></h2>
+            <table class="data-table" id="gift-registry-purchased-table">
+            <col width="1" />
+            <col />
+            <col />
+            <col width="1" />
+            <col width="1" />
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th><?php echo $this->__('Product Name') ?></th>
+                        <th><?php echo $this->__('Purchased by') ?></th>
+                        <th class="a-center"><span class="nobr"><?php echo $this->__('Unit Prices') ?></span></th>
+                        <th class="a-center"><span class="nobr"><?php echo $this->__('Qty Purchased') ?></span></th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($this->getGiftRegistryPurchasedItems() as $item): ?>
+                    <?php
+                        $product = $item->getProduct();
+                        $isVisibleProduct = $product->isVisibleInSiteVisibility();
+                    ?>
+                    <tr>
+                        <td>
+                            <a class="product-image" href="<?php echo $this->getProductUrl($item) ?>" title="<?php echo $this->escapeHtml($product->getName()) ?>"><img src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(113, 113); ?>" width="113" height="113" alt="<?php echo $this->escapeHtml($product->getName()) ?>" /></a>
+                        </td>
+                        <td>
+                            <h2 class="product-name"><a href="<?php echo $this->getProductUrl($item) ?>"><?php echo $this->escapeHtml($product->getName()) ?></a></h2>
+                            <?php echo $this->getDetailsHtml($item) ?>
+                        </td>
+                        <td>
+                            <p><strong><?php echo $item->getBuyerName(); ?></strong> <?php echo $this->__('on') ?> <span class="nobr"><?php echo $this->getFormatedDate($item->getPurchasedAt()) ?></span></p>
+                            <p><?php echo $item->getBuyerMessage(); ?></p>
+                        </td>
+                        <td class="a-right">
+                            <?php echo $this->getPriceHtml($product) ?>
+                        </td>
+                        <td class="a-center">
+                            <p><?php echo $item->getQtyPurchased() * 1 ?></p>
+                        </td>
+                        <td>
+                            <a href="<?php echo $this->getPurchasedItemRemoveUrl($item) ?>" title="<?php echo $this->__('Remove Purchased Item') ?>" onclick="return confirm('<?php echo $this->__('Are you sure you want to remove this purchased product from your gift registry?') ?>');" class="btn-remove btn-remove2"><?php echo $this->__('Remove Purchased item')?></a>
+                        </td>
+                    </tr>
+                <?php endforeach ?>
+                </tbody>
+            </table>
+            <script type="text/javascript">decorateTable('gift-registry-purchased-table')</script>
+        </div>
+    <?php endif ?>
+<script type="text/javascript">
+//<![CDATA[
+    function confirmRemoveGiftRegistryItem() {
+        return confirm('<?php echo $this->__('Are you sure you want to remove this product from your gift registry?') ?>');
+    }
+
+    function addGRItemToCart(itemId) {
+        var url = '<?php echo $this->getItemAddToCartUrl('%item%') ?>';
+        url = url.gsub('%item%', itemId);
+        var form = $('giftregistry-view-form');
+        if (form) {
+            var input = form['qty[' + itemId + ']'];
+            if (input) {
+                var separator = (url.indexOf('?') >= 0) ? '&' : '?';
+                url += separator + input.name + '=' + encodeURIComponent(input.value);
+            }
+        }
+        setLocation(url);
+    }
+
+    function addAllGRItemsToCart() {
+        var url = '<?php echo $this->getUrl('*/*/allcart') ?>';
+        var separator = (url.indexOf('?') >= 0) ? '&' : '?';
+        $$('#giftregistry-view-form .qty').each(
+            function (input, index) {
+                url += separator + input.name + '=' + encodeURIComponent(input.value);
+                separator = '&';
+            }
+        );
+        setLocation(url);
+    }
+//]]>
+</script>
+</div>
+
+<?php endif ?>

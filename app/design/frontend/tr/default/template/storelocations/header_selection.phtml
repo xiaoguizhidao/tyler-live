@@ -1,0 +1,12 @@
+<li class="link-shopping-preference">
+	<div id="mappingGeoLocationSelection">
+		<?php echo $this->__('My Shopping Preference'); ?>
+		<a id="mappingGeoLocationSelection-btn" class="mappingGeoLocationSelection-label" href="javascript: void(0);">
+			<?php if(Mage::getSingleton('core/session')->getSelectionText()) :?>
+                <?php echo Mage::getSingleton('core/session')->getSelectionText()?>
+            <?php else:?>
+                <?php echo $this->__('Pickup/Browse or Ship My Order'); ?>
+            <?php endif; ?>
+		</a>
+	</div>
+</li>

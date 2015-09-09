@@ -1,0 +1,41 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this RIS_GiftRegistry_Block_Customer_Giftregistry_Item_Options */
+?>
+
+<?php $options = $this->getOptionList(); ?>
+<?php if ($options): ?>
+<div class="truncated">
+  <div class="truncated_full_value">
+      <div class="item-options">
+          <p><?php echo $this->__('Options Details'); ?></p>
+          <dl>
+              <?php foreach ($options as $option): ?>
+              <dt><?php echo $this->escapeHtml($option['label']) ?></dt>
+              <dd>
+                  <?php if (is_array($option['value'])): ?>
+                  <?php echo nl2br(implode("\n", $option['value'])) ?>
+                  <?php else: ?>
+                  <?php echo $option['value'] ?>
+                  <?php endif; ?>
+              </dd>
+              <?php endforeach; ?>
+          </dl>
+      </div>
+  </div>
+  <a href="#" onclick="return false;" class="details"><?php echo $this->__('View Details') ?></a>
+</div>
+<?php endif ?>

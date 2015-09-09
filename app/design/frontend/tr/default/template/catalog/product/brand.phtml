@@ -1,0 +1,19 @@
+<div class="brandlist">
+<?php
+$attribute = Mage::getModel('eav/config')->getAttribute('catalog_product', 'manufacturer');
+foreach ( $attribute->getSource()->getAllOptions(true, true) as $option){
+     $attributeArray[$option['value']] = $option['label'];
+     
+     }  
+
+foreach($attributeArray as $key=>$val){
+  $url = '/catalogsearch/advanced/result/'.'?manufacturer%5B%5D='.$key;
+  if ($val==="") {}
+else { ?>
+  <div class="brandsname"><a href="<?php echo $url ?>"><img src="<?php $imgurl=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "brandlogo/" .strtoupper($val). ".jpg"; if (@getimagesize($imgurl)){echo $imgurl;} ?>" style="width:100px;height:100px;margin-top:-10px;" attribute="<?php echo $val ?>" title="<?php echo $val ?>"/></a></div>
+<?php }}?>
+</div>
+<style>
+.brandlist {margin:auto;}
+.brandsname {min-width:100px;float:left;width:14%;padding:10px;text-align: center;}
+</style>

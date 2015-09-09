@@ -1,0 +1,47 @@
+<p class="blurb">
+    <span style="font-size: 15px;"><?php echo $this->__('Change Shipping/Store Pickup Selection')?></span><br> <br> 
+    <span style="font-size: 13px;"><?php echo $this->__('Please select your desired shipping method. Please note that changing this information may affect the contents of your shopping cart.')?></span><br> <br>
+</p>
+<?php $coreSessionObj = Mage::getSingleton('core/session'); ?>
+<?php 
+$storeLevel = false;
+if($coreSessionObj->getStoreViewId() && $coreSessionObj->getStoreViewType() == 'pickup') 
+{ 
+    $storeDefault = Mage::getModel('storelocations/storelocations')->load($coreSessionObj->getStoreViewId());
+    if(is_object($storeDefault) && $storeDefault->getId()) {
+        $storeLevel = $storeDefault->getStoreOrderAvailability();
+    }
+}
+?>
+<form id="selection-filter">
+    <fieldset id="store_filter_selection">
+        <label name="options-filter-type"><?php echo $this->__('Please choose a shopping method:')?></label>
+        <div class="input-box">
+            <select id="options-filter-type" name="options-filter-type" class="required-entry select" onchange="changeOptionFilterType(this)">
+                <option value=""><?php echo $this->__('Select Shopping Preference'); ?></option>
+                <option value="shipto" <?php if(Mage::getSingleton('core/session')->getStoreViewType() == 'shipto') echo 'selected="selected"';?>><?php echo $this->__('Ship My Order'); ?></option>
+                <option value="pickup" <?php if(Mage::getSingleton('core/session')->getStoreViewType() == 'pickup') echo 'selected="selected"';?>><?php echo $this->__('Pickup at Store / Browse Online'); ?></option>
+            </select>
+        </div>
+    </fieldset>
+    <fieldset id="store_filter_option_2"></fieldset>
+    <fieldset id="store_filter_option_3"></fieldset>
+    <div class="warning-items-remove" style="display: none">
+        <div id="warning-items-remove-msg"></div>
+        <br/>
+        <input type="checkbox" name="remove-items" value="1" id="remove-items"/><?php echo $this->__('I understand that items will be removed from my cart'); ?>
+    </div>
+    <span id="popup-loading-option" style="display: none"><img src="<?php echo $this->getSkinUrl('images/storelocations/ajax-loader.gif') ?>" alt="Loading..." /></span>
+    <fieldset class="buttons">
+        <button class="button" onclick="setShippingLocation(); return false;" title="<?php echo $this->__('Continue'); ?>"><span><span><?php echo $this->__('Continue'); ?></span></span></button>
+    </fieldset>
+    <fieldset class="buttonsOption"  style="display: none">
+        <button class="button" onclick="setShippingLocation('change'); return false;" title="<?php echo $this->__('Update Shipping Preference'); ?>"><span><span><?php echo $this->__('Update Shipping Preference'); ?></span></span></button>
+        <button class="button" onclick="setShippingLocation('cancel'); return false;" title="<?php echo $this->__('Cancel and continue shopping'); ?>"><span><span><?php echo $this->__('Cancel and continue shopping'); ?></span></span></button>
+    </fieldset>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var selectionFilter = new VarienForm('selection-filter', true);
+//]]>
+</script>

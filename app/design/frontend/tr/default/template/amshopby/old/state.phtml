@@ -1,0 +1,32 @@
+<?php $_filters = $this->getActiveFilters() ?>
+<?php $_removeTxt = Mage::helper('catalog')->__('Remove This Item') ?>
+<?php if (!empty($_filters)): ?>
+<div class="currently">
+    <p class="block-subtitle">
+		<span><?php echo $this->__('Selected Filters') ?></span>
+    	<a href="<?php echo Mage::helper('amshopby/url')->getFullUrl(array(), 1) ?>" title="<?php echo $this->__('Remove All Filters') ?>"><?php echo $this->__('Remove All') ?></a>
+    </p>
+    <ol>
+    <?php foreach ($_filters as $_filter): ?>
+        <li>
+            <span class="label"><?php echo Mage::helper('catalog')->__($_filter->getName()) ?>:</span>
+			<?php
+            $_model = $_filter->getFilter()->getAttributeModel();
+			$_code = ($_model ? $_model->getAttributeCode() : false);
+				
+			if($_code && $_code == 'price') : ?>
+             	<span class="current_option">
+					<?php echo $_filter->getLabel(); ?>
+					<a href="<?php echo $_filter->getRemoveUrl() ?>"><img alt="<?php echo $_removeTxt ?>" src="<?php echo $this->getSkinUrl('images/btn_remove.gif') ?>"></a>
+                </span>
+          	<?php else : ?>
+				<?php $options = explode(',', $_filter->getLabel()); ?>
+                <?php foreach($options as $option) : ?>  
+                    <span class="current_option"><?php echo $option; ?></span>
+                <?php endforeach; ?>
+			<?php endif; ?>
+        </li>
+    <?php endforeach; ?>
+    </ol>
+</div> 
+<?php endif; ?>

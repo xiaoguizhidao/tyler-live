@@ -1,0 +1,222 @@
+<?php $_store = $this->getStore();?>
+<?php $_helper = $this->helper('storelocations'); ?>
+<?php $_storeHours = $this->getStoreHours(); ?>
+<?php $_contacts = $this->getContacts(); ?>
+<div id="storeLocatorBlock">
+    <h2><?php echo $_store->getStoreName(); ?></h2>
+		
+    
+    <?php if($_helper->getGoogleMapKey() != '') :?> 
+    <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;key=<?php echo $_helper->getGoogleMapKey();?>" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        var MAP;
+        var GEOCODER;
+
+        var GOOGLE_MAP_DIV_ID = "GoogleMap_div";
+        var GOOGLE_MAP_CENTER_POINT = {"LATITUDE":0.0,"LONGITUDE":0.0};
+
+        var GOOGLE_MAP_LAST_REQUEST_INFO;
+        var GOOGLE_MAP_LAST_REQUEST_MARKER_OPTIONS;
+
+        var GOOGLE_MAP_DIRECTIONS_TO_CONTENT = "<div class=\'googleMapContainer\'><form action=\'http://maps.google.com/maps\' target=\'_blank\' method=\'get\'>Your Address:<br /><input type=\'text\' size=\'40\' maxlength=\'255\' name=\'saddr\' id=\'saddr\' value=\'\' /><input id=\'SUBMIT\' type=\'submit\' value=\'Get directions to here.\' class=\'form-button\' style=\'width:175px\'><input type=\'hidden\' name=\'daddr\' value=\'::DESTINATION_ADDRESS::\' /><input type=\'hidden\' name=\'hl\' value=\'en\' /></form></div>";
+
+        var MAP;
+
+        $j().ready( function () {
+
+                if ( GBrowserIsCompatible() ) {
+
+                        var MAPSIZE = new GSize( width=437, height=400 )
+                        MAP = new GMap2( container=document.getElementById( "GoogleMap_div" ), opts={ size: MAPSIZE } );
+                        MAP.setCenter( new GLatLng( GOOGLE_MAP_CENTER_POINT.LATITUDE, GOOGLE_MAP_CENTER_POINT.LONGITUDE ), 13 );
+
+                        var customUI =  MAP.getDefaultUI();
+                        customUI.controls.scalecontrol = false;
+                        customUI.zoom.scrollwheel = true;
+
+                        customUI.maptypes.normal = true;
+                        customUI.maptypes.satellite = true;
+                        customUI.maptypes.hybrid = true;
+                        customUI.maptypes.physical = true;
+                        MAP.setUI(customUI);
+
+                        GEOCODER = new GClientGeocoder();
+                }
+
+                $j( "body" ).unload( function () {
+                        GUnload();
+                });
+
+        });
+
+        $j().ready( function () {
+
+            <?php 
+            $addr = '<strong>'.$_store->getStoreName().'</strong>'
+            .'<br />'.$_store->getStoreAddress()
+            .($_store->getStoreAddress2() != '' ? '<br/>'.$_store->getStoreAddress2() : '')
+            .'<br />'.$_store->getStoreCity().', '
+            .($_store->getStoreStateId() != '' ? $_helper->getRegionCode($_store->getStoreStateId()) : $_store->getStoreState()).', '
+            .$_store->getStoreZipcode();
+            ?>
+            <?php $daddr = $_store->getStoreAddress()
+            .($_store->getStoreAddress2() != '' ? ', '.$_store->getStoreAddress2() : '')
+            .', '.$_store->getStoreCity().', '
+            .($_store->getStoreStateId() != '' ? $_helper->getRegionCode($_store->getStoreStateId()) : $_store->getStoreState()).', '
+            .$_store->getStoreZipcode();?>
+            var point = new GLatLng(<?php echo $_store->getStoreLat();?>,<?php echo $_store->getStoreLong();?>);
+            var markerIcon = new GIcon(G_DEFAULT_ICON);
+            markerIcon.image = "http://www.google.com/mapfiles/markerA.png";
+            markerOptions = { icon: markerIcon };
+            var markerIcon_A = new GMarker(point,markerOptions);
+            MAP.addOverlay( markerIcon_A );
+
+            MAP.panTo( point );
+
+
+            GEvent.addListener(markerIcon, "click", function() {
+                //MAP.panTo( point );
+                var addr = "<?php echo $addr?>";
+                var daddr = "<?php echo $daddr?>";
+                var info = GOOGLE_MAP_DIRECTIONS_TO_CONTENT.replace( /::DESTINATION_ADDRESS::/gi, daddr );
+                markerIcon_A.openInfoWindowHtml( addr + "<br /><br />" + info );
+
+            });	                  
+
+        FitMapToMarkers(MAP);
+
+        function FitMapToMarkers(oMap) {
+                var latlngbounds = new GLatLngBounds( );
+                LatLon = new GLatLng(<?php echo $_store->getStoreLat();?>,<?php echo $_store->getStoreLong();?>);
+                latlngbounds.extend(LatLon);
+
+                ZoomLevel = oMap.getBoundsZoomLevel( latlngbounds );
+                if ( ZoomLevel > 15 ) { ZoomLevel = 15; }
+                oMap.setCenter( latlngbounds.getCenter( ), ZoomLevel );
+        }
+
+    });
+    </script>
+    
+    <div id="GoogleMap_div"></div>
+    <?php endif;?>
+
+    <div id="store-details">
+        <div id="pic-and-info">
+            <?php if($_store->getStoreImage() != '') :?>
+            <div id="banner_storefront">
+                <span class="bannerPlaceHolder" id="bphId_bannerStoreLocator">
+                    <img src="<?php echo $_helper->getResizedUrl($_store->getStoreImage(),253,190);?>" alt="<?php echo $_store->getStoreName(); ?>" />
+                </span> 
+            </div>
+            <?php endif; ?>
+            <div id="address_block">
+                <?php echo $_store->getStoreName();?><br/>
+                <?php echo $_store->getStoreAddress();?>
+                <?php if($_store->getStoreAddress2() != ''): ?>
+                <br/><?php echo $_store->getStoreAddress2();?>
+                <?php endif?>
+                <br/> 
+                <?php echo $_store->getStoreCity(); ?>, 
+                <?php 
+                if($_store->getStoreStateId() != '') 
+                    echo $_store->getRegionCode($_store->getStoreStateId()); 
+                else 
+                    echo $_store->getStoreState();
+                ?> <?php echo $_store->getStoreZipcode(); ?>
+                <?php if($_store->getStoreTelephone()) :?>
+                <br/>
+                <?php echo $this->__('Phone'); ?>: <?php echo $_store->getStoreTelephone();?>
+                <?php endif;?>
+            </div>
+        </div>
+        <div id="more-info"></div>
+    </div>
+
+    <div id="store-more-info">
+        <script type="text/javascript">
+        /*<![CDATA[*/
+        jQuery(document).ready(function(){
+
+            jQuery('.tabs li:first').addClass('active');
+            var activeTab = jQuery('.tabs .active a').attr('href');
+            jQuery(activeTab).addClass('on');
+            jQuery('.tabs a').each(function(){
+                jQuery(this).click(function(){
+                    activeTab = jQuery(this).attr('href');
+                    jQuery('.tabs li').removeAttr('class');
+                    jQuery(this).parent().addClass('active');
+                    jQuery('.tab-content').removeClass('on');
+                    jQuery(activeTab).addClass('on');
+                    return false
+                })
+            })
+            
+        });
+        /*]]>*/
+        </script>
+        <ul class="tabs">
+            <?php if($_storeHours) : ?>
+            <li>
+                <a href="#store_hours"><?php echo $this->__('Hours'); ?></a>
+            </li>
+            <?php endif; ?>
+            <?php if($_contacts) : ?>
+            <li>
+                <a href="#team"><?php echo $this->__('Store Team'); ?></a>
+            </li>
+            <?php endif; ?>
+        </ul>
+
+        <?php if($_storeHours) : ?>
+        <div class="tab-content" id="store_hours">
+            <div> 
+                <table width="100%" cellspacing="0" cellpadding="0" border="0"> 
+                  <thead>
+                      <tr>
+                          <th width="95">&nbsp;</th>
+                          <?php foreach($_storeHours['timeschedule'] as $hours) :?>
+                          <th><?php echo $this->__($hours['name'])?></th>
+                          <?php endforeach;?>
+                      </tr>
+                  </thead> 
+                  <tbody>
+                    <?php foreach($_storeHours['interval'] as $day) :?>
+                        <tr>
+                            <td align="right"><strong><?php echo $this->__($day['day_name']);?></strong></td>
+                            <?php foreach ($day['day_hours'] as $hour) :?>   
+                                <?php if($hour): ?>
+                                    <td align="center"><?php echo $hour;?></td>
+                                <?php else :?>
+                                    <td align="center">--</td>
+                                <?php endif; ?>
+                            <?php endforeach;?>
+                        </tr>
+                    <?php endforeach;?>
+                  </tbody>
+                  </table>
+            </div>                                                                    
+        </div>
+        <?php endif; ?>
+        <?php if($_contacts) : ?>
+        <div class="tab-content" id="team">
+            
+            <span style="font-family: Arial; font-size: 11px; font-weight: bold"></span>
+            <table cellspacing="0" cellpadding="0" border="0">
+                <thead>
+                    <th colspan="2"><h5><span style="font-family: Arial; font-size: 13px; font-weight: bold"><?php echo $this->__('Meet Our Store Team'); ?></span></h5></th>
+                </thead>
+                <tbody>
+                    <?php foreach($_contacts as $contact) : ?>
+                    <tr>  
+                        <td width="150px"><span style="font-family: Arial; font-size: 11px; font-weight: bold"><?php echo $this->__($contact['title'])?></span></td> 
+                        <td width="151px"><span style="font-family: Arial; font-size: 11px;"><?php echo $this->__($contact['name'])?></span></td> 
+                    </tr> 
+                    <?php endforeach;?>
+                </tbody>
+            </table>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>

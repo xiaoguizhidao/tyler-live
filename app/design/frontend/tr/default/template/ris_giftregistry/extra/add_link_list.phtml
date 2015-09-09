@@ -1,0 +1,21 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this RIS_GiftRegistry_Block_Extra */
+?>
+<?php $_product = $this->getProduct(); ?>
+<?php if ($this->helper('ris_giftregistry')->isAllow()) : ?>
+    <li><a href="<?php echo $this->helper('ris_giftregistry')->getAddUrl($_product) ?>" onclick="GiftRegistry.AjaxModel.callAjax(this, '<?php echo $_giftregistrySubmitUrl ?>', false, false); return false;" class="link-giftregistry"><?php echo $this->__('Add to Gift Registry') ?></a></li>
+<?php endif; ?>

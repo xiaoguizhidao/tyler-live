@@ -1,0 +1,11 @@
+<?php $_menu = $this->renderCategoriesMenuHtml(1,'level-top') ?>
+<?php if($_menu): ?>
+<ul id="nav-drop-down" class="dropdown-trigger">
+	<a href="#" class="shop-categories-link">Shop by Category</a>
+    <div class="dropdown-wrapper">
+        <ul class="dropdown">
+            <?php echo $_menu ?>
+        </ul>
+    </div>
+</ul>
+<?php endif ?>

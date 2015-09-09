@@ -1,0 +1,66 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this RIS_GiftRegistry_Block_Extra */
+
+$_productId = $this->getProductId();
+$_product = Mage::getModel('catalog/product');
+$_product = $_product->load($_productId);
+$_helper = $this->helper('catalog/output');
+?>
+<a href="javascript:void(0);" class="tlgr-modal-close" onclick="GiftRegistry.AjaxModel.hideModal(); return false;" title="<?php echo $this->__('Close'); ?>"></a>
+<div class="tlgr-modal-message">
+    <?php echo $this->getLayout()->getMessagesBlock()->toHtml(); ?>
+</div>
+<form class="tlgr-form" action="javascript:void(0);" id="tlgr-update-description-form">
+    <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+    <input type="hidden" id="tlgr-update-description:gr_product_id" name="gr_product_id" value="<?php echo $_productId; ?>" />
+    <input type="hidden" id="tlgr-update-description:gr_product_qty" name="qty" value="5" />
+    <h2><?php echo $this->__('Add to Gift Registry'); ?></h2>    
+    <div class="product-shop">
+        <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+            <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+        <?php endif;?>
+    </div>
+    
+    
+    <div class="fieldset">
+        <ul class="form-list">
+            <li class="fields">
+                <div class="field gift_registry_id">
+                    <label for="tlgr-update-description:gift_registry_id" class="required"><?php echo $this->__('Gift Registry'); ?><em>*</em>:</label>
+                    <div class="input-box">
+                        <select id="tlgr-update-description:gift_registry_id" name="gift_registry_id" title="<?php echo $this->__('Select a registry:'); ?>" class="validate-select">
+                            <?php $active_id = Mage::getSingleton('ris_giftregistry/session')->getActiveGiftRegistryId();?>
+                            <?php foreach ($this->getGiftRegistries() as $_gift_registry):?>
+                                <option value="<?php echo $_gift_registry->getId() ?>"<?php if ($_gift_registry->getId() == $active_id) echo ' selected="selected"' ?>><?php echo $this->escapeHtml($_gift_registry->getTitle()) ?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                    <div class="clearer"></div>
+                </div>
+                <div class="field">
+                    <label for="tlgr-update-description:gr_description"><?php echo $this->__('Enter a message for this item (optional)'); ?></label>
+                    <textarea id="tlgr-update-description:gr_description" name="gr_description" cols="20" rows="10" placeholder="<?php echo $this->helper('ris_giftregistry')->defaultCommentString() ?>"></textarea>
+                    <div class="tip"><?php echo $this->__('You may enter a message which will be shared with your registry contributors.'); ?></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons-set">
+        <button type="submit" title="<?php echo $this->__('Save & Continue Shopping') ?>" onclick="GiftRegistry.AjaxModel.submitUpdateDescriptionForm(this, 'tlgr-update-description-form', 'save_and_continue', '<?php echo $this->getUrl('giftregistry/index/update_description_ajax') ?>', '#'); return false;" class="button btn-orange"><span><span><?php echo $this->__('Save & Continue Shopping') ?></span></span></button>
+        <button type="submit" title="<?php echo $this->__('Save & View Registry') ?>" onclick="GiftRegistry.AjaxModel.submitUpdateDescriptionForm(this, 'tlgr-update-description-form', 'save_and_view', '<?php echo $this->getUrl('giftregistry/index/update_description_ajax') ?>', '#'); return false;" class="button"><span><span><?php echo $this->__('Save & View Registry') ?></span></span></button>
+    </div>
+</form>

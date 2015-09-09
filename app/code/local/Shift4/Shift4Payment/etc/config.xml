@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category	Shift4
+ * @package		Shift4_Shift4Payment
+ * @copyright	Copyright (c) 2011 Shift4 Corporation (http://www.shift4.com)
+ * @license		http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+	<modules>
+		<Shift4_Shift4Payment>
+			<version>1.0.2a</version>
+		</Shift4_Shift4Payment>
+	</modules>
+	<global>
+		<blocks>
+			<shift4payment>
+				<class>Shift4_Shift4Payment_Block</class>
+			</shift4payment>
+		</blocks> 	
+		<models>
+			<shift4payment>
+				<class>Shift4_Shift4Payment_Model</class>
+			</shift4payment>
+		</models>
+		<helpers>
+			<shift4payment>
+				<class>Shift4_Shift4Payment_Helper</class>
+			</shift4payment>
+		</helpers>
+		<resources>
+			<shift4payment_setup>
+				<setup>
+					<module>Shift4_Shift4Payment</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</shift4payment_setup>
+			<shift4payment_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</shift4payment_write>
+			<shift4payment_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</shift4payment_read>
+		</resources>
+	</global>
+	<frontend>
+		<routers>
+			<shift4payment>
+				<use>standard</use>
+				<args>
+					<module>Shift4_Shift4Payment</module>
+					<frontName>shift4payment</frontName>
+				</args>
+			</shift4payment>
+		</routers>
+		<layout>
+			<updates>
+				<shift4payment>
+					<file>shift4payment.xml</file>
+				</shift4payment>
+			</updates>
+		</layout>		
+	</frontend>
+	<default>
+		<payment>
+			<shift4payment>
+				<model>shift4payment/paymentMethod</model>
+				<active>0</active>
+				<title>Credit Card (Shift4: Secure Payment Processing)</title>
+				<demo_mode>1</demo_mode>
+				<enforce_address>1</enforce_address>
+				<transaction_mode>1</transaction_mode> <!-- Transaction mode: Book and Ship -->
+				<log_mode>0</log_mode>
+			</shift4payment>
+		</payment>
+	</default>
+</config>

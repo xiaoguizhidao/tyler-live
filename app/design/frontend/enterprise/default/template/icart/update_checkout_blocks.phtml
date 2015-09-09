@@ -1,0 +1,55 @@
+<?php
+/**
+ * MageWorx
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MageWorx EULA that is bundled with
+ * this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.mageworx.com/LICENSE-1.0.html
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@mageworx.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension
+ * to newer versions in the future. If you wish to customize the extension
+ * for your needs please refer to http://www.mageworx.com/ for more information
+ * or send an email to sales@mageworx.com
+ *
+ * @category   design
+ * @package    default_default
+ * @copyright  Copyright (c) 2010 MageWorx (http://www.mageworx.com/)
+ * @license    http://www.mageworx.com/LICENSE-1.0.html
+ */
+
+/**
+ * Instant Cart extension
+ *
+ * @category   design
+ * @package    default_default
+ * @author     MageWorx Dev Team <dev@mageworx.com>
+ */
+$requestUrl = $this->getRequest()->getRequestString();
+$refererUrl = $this->getRequest()->getServer('HTTP_REFERER');
+?>
+<script type="text/javascript">
+//<![CDATA[   
+<?php if ((strpos($requestUrl, '/updateRegion/')) || (strpos($requestUrl, '/updateShipping/'))) { ?>
+    //shipping and region
+    iCart.replaceBlock($$('div.shipping'), <?php echo Zend_Json::encode($this->getChildHtml('shipping'))?>);    
+<?php } elseif (strpos($requestUrl, '/updateDiscount/')) {?>
+    //discount
+    var couponBlock = <?php echo Zend_Json::encode($this->getChildHtml('coupon'));?>;
+    var firstPartOfBlock = couponBlock.substr(0, couponBlock.indexOf('<h2>'));
+    var secondPartOfBlock = couponBlock.substr(couponBlock.indexOf('<h2>'), couponBlock.length - 1);
+    couponBlock = firstPartOfBlock + <?php echo $this->getMessagesBlock()->getGroupedHtml() ?> + secondPartOfBlock;
+    iCart.replaceBlock($$('div.discount'), couponBlock);      
+<?php } ?> 
+iCart.replaceBlock($$('table#shopping-cart-totals-table'), <?php echo Zend_Json::encode($this->getChildHtml('totals'))?>);
+setTimeout(iCart.updateLinks, 50);    
+//]]>
+</script>

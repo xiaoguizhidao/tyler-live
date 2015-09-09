@@ -1,0 +1,49 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this RIS_GiftRegistry_Block_Customer_Sidebar */
+?>
+<?php if ($this->helper('ris_giftregistry')->isAllow()) : ?>
+<?php //DO NOT REMOVE ID tag. it is used in javascript @see skin/frontend/base/default/js/ris_giftregistry/main.js ?>
+<div class="block block-giftregistry" id="gift-registry-sidebar">
+    <div class="block-title">
+        <strong><span><?php echo $this->__('Gift Registry') ?></span></strong>
+    </div>
+    <div class="block-content">
+    <p class="block-subtitle"><?php echo $this->__('Last Added Items') ?></p>
+    <?php if ($this->hasGiftRegistryItems()): ?>
+    <ol class="mini-products-list" id="gift-registry-sidebar-list">
+     <?php foreach ($this->getGiftRegistryItems() as $_item): ?>
+        <?php $product = $_item->getProduct(); ?>
+        <li class="item">
+            <a href="<?php echo $this->getProductUrl($_item) ?>" title="<?php echo $this->escapeHtml($product->getName()) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($product, 'thumbnail')->resize(50); ?>" width="50" height="50" alt="<?php echo $this->escapeHtml($product->getName()) ?>" /></a>
+            <div class="product-details">
+                <a href="<?php echo $this->getItemRemoveUrl($_item) ?>" title="<?php echo $this->__('Remove This Item') ?>" onclick="return confirm('<?php echo $this->__('Are you sure you would like to remove this item from the gift registry?') ?>');" class="btn-remove"><?php echo $this->__('Remove This Item') ?></a>
+                <p class="product-name"><a href="<?php echo $this->getProductUrl($_item) ?>"><?php echo $this->escapeHtml($product->getName()) ?></a></p>
+                <?php echo $this->getPriceHtml($product, false, '-giftregistry') ?>
+            </div>
+        </li>
+    <?php endforeach; ?>
+    </ol>
+    <script type="text/javascript">decorateList('gift-registry-sidebar-list');</script>
+    <div class="actions">
+        <a href="<?php echo $this->helper('ris_giftregistry')->getViewUrl() ?>"><?php echo $this->__('Go to Gift Registry') ?></a>
+    </div>
+    <?php else: ?>
+        <p class="empty"><?php echo $this->__('You have no items in your gift registry.') ?></p>
+    <?php endif ?>
+    </div>
+</div>
+<?php endif ?>

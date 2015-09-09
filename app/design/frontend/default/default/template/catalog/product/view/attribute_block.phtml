@@ -1,0 +1,10 @@
+<?php
+$_product = Mage::registry('current_product');
+$attribute_code = $this->getAttributeCode();
+
+if($_product && $attribute_code) {
+	$attribute_value = $_product->getResource()->getAttribute($attribute_code)->getFrontend()->getValue($_product);
+	
+	echo $attribute_value;		
+
+}

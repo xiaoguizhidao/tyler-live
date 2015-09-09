@@ -1,0 +1,20 @@
+<?php $_store = $this->getStore();?>
+	<?php if($_store) : ?>
+    <?php echo $_store->getStoreName();?><br/>
+    <?php echo $_store->getStoreAddress();?>
+    <?php if($_store->getStoreAddress2() != ''): ?>
+    <br/><?php echo $_store->getStoreAddress2();?>
+    <?php endif?>
+    <br/> 
+    <?php echo $_store->getStoreCity(); ?>, 
+    <?php 
+    if($_store->getStoreStateId() != '') 
+        echo $_store->getRegionCode($_store->getStoreStateId()); 
+    else 
+        echo $_store->getStoreState();
+    ?> <?php echo $_store->getStoreZipcode(); ?>
+    <?php if($_store->getStoreTelephone()) :?>
+    <br/>
+    <?php echo $this->__('Phone'); ?>: <?php echo $_store->getStoreTelephone();?>
+    <?php endif;?>
+<?php endif; ?>

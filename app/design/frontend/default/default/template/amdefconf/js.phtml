@@ -1,0 +1,11 @@
+<?php 
+$selectedIds = $this->getAttributeIdsString(); 
+if ($selectedIds):
+?>
+    <script type="text/javascript">
+    defaultConfiguration = new amDefConf();
+    Event.observe(window, 'load', function() {
+        defaultConfiguration.select(<?php echo $selectedIds; ?>);
+    });
+    </script>
+<?php endif; ?>

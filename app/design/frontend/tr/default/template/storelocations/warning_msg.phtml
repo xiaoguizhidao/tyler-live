@@ -1,0 +1,29 @@
+<?php 
+
+    $items = Mage::getSingleton('checkout/cart')->getItems();
+     
+    if(count($items) > 0) {
+
+        $coreSessionObj = Mage::getSingleton('core/session'); 
+        $storeLevel = 0;
+        if($coreSessionObj->getStoreViewId() && $coreSessionObj->getStoreViewType() == 'pickup') 
+        { 
+            $storeDefault = Mage::getModel('storelocations/storelocations')->load($coreSessionObj->getStoreViewId());
+            if(is_object($storeDefault) && $storeDefault->getId()) {
+                $storeLevel = $storeDefault->getStoreOrderAvailability();
+            }
+        }
+
+        if($storeLevel == 1) {
+            $msg = Mage::getStoreConfig('storelocations/general/order_availability_msg', Mage::app()->getStore()->getId());
+            
+?>
+
+<ul class="messages">
+        <li class="notice-msg"><ul><li><span><?php echo Mage::getStoreConfig('storelocations/general/order_availability_msg', Mage::app()->getStore()->getId()); ?></span></li></ul></li>
+</ul>
+
+<?php
+        }
+    }
+?>

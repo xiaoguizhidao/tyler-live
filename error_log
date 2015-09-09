@@ -1,0 +1,7 @@
+[16-Dec-2013 22:20:14 UTC] PHP Fatal error:  Call to a member function getId() on a non-object in /home/linkdemo/public_html/magento/tandr/app/code/core/Mage/Catalog/Model/Product/Type/Configurable/Price.php on line 85
+[05-Feb-2014 00:21:10 UTC] PHP Fatal error:  Call to a member function setCustomerId() on a non-object in /home/linkdemo/public_html/magento/tandr/app/code/core/Mage/Customer/controllers/AccountController.php on line 601
+[05-Feb-2014 00:21:16 UTC] PHP Fatal error:  Call to a member function setCustomerId() on a non-object in /home/linkdemo/public_html/magento/tandr/app/code/core/Mage/Customer/controllers/AccountController.php on line 601
+[05-Feb-2014 03:48:44 UTC] PHP Fatal error:  Call to a member function setCustomerId() on a non-object in /home/linkdemo/public_html/magento/tandr/app/code/core/Mage/Customer/controllers/AccountController.php on line 601
+[05-Feb-2014 22:52:37 UTC] PHP Fatal error:  Undefined class constant 'RESPONSE_ERROR' in /home/linkdemo/public_html/magento/tandr/app/code/local/Shift4/Shift4Payment/controllers/ProcessingController.php on line 130
+[06-Feb-2014 01:42:34 UTC] PHP Fatal error:  Undefined class constant 'RESPONSE_ERROR' in /home/linkdemo/public_html/magento/tandr/app/code/local/Shift4/Shift4Payment/controllers/ProcessingController.php on line 130
+[06-Feb-2014 01:47:50 UTC] PHP Fatal error:  Undefined class constant 'RESPONSE_ERROR' in /home/linkdemo/public_html/magento/tandr/app/code/local/Shift4/Shift4Payment/controllers/ProcessingController.php on line 130

@@ -1,0 +1,17 @@
+.salesTotal, .statsTotal, .timeoutsTotal {
+	padding: 5px 5px 5px 5px;
+	font-size: 1.3em;
+	font-weight: bold;
+	text-align: right;
+	background-color: lightgray;
+}
+.salesTotal, .timeoutsTotal  {
+	width: 841px;
+}
+.statsTotal {
+	width: 341px;
+}
+.title {
+	color: white;
+	font-size: 1.3em;
+}

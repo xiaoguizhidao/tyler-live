@@ -1,0 +1,54 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category	design_default
+ * @package		Shift4_Shift4Payment
+ * @copyright	Copyright (c) 2011 Shift4 Corporation (http://www.shift4.com)
+ * @license		http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+    $cards = $this->getCards();
+    $showCount = count($cards) > 1;
+
+    if (!$this->getHideTitle()) {
+    	echo $this->htmlEscape($this->getMethod()->getTitle());
+	}
+
+	if (count($cards) == 0):
+		echo $this->__('<br />');
+		echo $this->__('(Payment not yet made)');
+	else:
+?>
+<dl class="cards-list">
+<?php foreach ($cards as $key => $card): ?>
+    <?php if ($showCount): ?>
+        <dt style="font-weight:bold;"><?php echo sprintf($this->__('Credit Card %s'), $key + 1); ?></dt>
+    <?php endif;?>
+
+    <dd <?php if ($showCount):?> class="offset"<?php endif;?>>
+    <table class="info-table">
+        <tbody>
+        <?php foreach ($card as $_label => $_value):?>
+        <tr>
+            <td valign="top"><?php echo $this->escapeHtml($_label)?>:</td>
+            <td><?php echo nl2br(implode($this->getValueAsArray($_value, true), "\n"))?></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    </dd>
+<?php endforeach; ?>
+</dl>
+<?php endif; ?>

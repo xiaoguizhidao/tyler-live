@@ -1,0 +1,145 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category	design_default
+ * @package		Shift4_Shift4Payment
+ * @copyright	Copyright (c) 2011 Shift4 Corporation (http://www.shift4.com)
+ * @license		http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+
+<?php if (Mage::helper('shift4payment')->isValidOrderFormat($this->getOrder()->getIncrementId())) { ?>
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/shift4payment/shift4payment.css') ?>" />
+
+	<div class="page-head">
+		<h3><?php echo $this->__('Please pay for your order now') ?></h3>
+	</div>
+	<div id="shift4payment">
+		<ul id="paymentMessages" class="messages">
+			<li id="declinedMessage" class="error-msg"></li>
+			<li id="partialAuthMessage" class="notice-msg">
+				<ul>
+					<li id="partialAuthCards"></li>
+					<li><h4 id="partialAuthRemaining"></h4></li>
+				</ul>
+				<ul>
+					<li>
+						<div>To cancel pending card payments, click Cancel Order.</div>
+					</li>
+				</ul>
+			</li>
+		</ul>
+		<div id="columnLeft">
+			<fieldset class="form-list">
+				<ul id="payment_form">
+					<li>
+						<div class="input-box">
+							<label for="cc_number"><?php echo $this->__('Credit Card Number') ?> <span class="required">*</span></label><br/>
+							<input type="text" id="CardNumber" name="CardNumber" title="<?php echo $this->__('Credit Card Number') ?>"
+								   class="required-entry input-text validate-cc-number" value="" autocomplete="off" />
+						</div>
+					</li>
+					<li>
+						<div class="input-box">
+							<label for="ExpirationMonth"><?php echo $this->__('Expiration Date') ?> </label><br />
+							<div class="v-fix">
+								<select id="ExpirationMonth" style="width:140px;" name="ExpirationMonth" class="required-entry">
+								<?php foreach ($this->getCcMonths() as $k=>$v): ?>
+									<option value="<?php echo $k?$k:'' ?>"><?php echo $v ?></option>
+								<?php endforeach ?>
+								</select>
+							</div>
+							<div class="v-fix" style="padding-left:5px;">
+								<select id="ExpirationYear" style="width:103px;" name="ExpirationYear" class="required-entry">
+								<?php foreach ($this->getCcYears() as $k=>$v): ?>
+									<option value="<?php echo $k?$k:'' ?>"><?php echo $v ?></option>
+								<?php endforeach ?>
+								</select>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="input-box">
+							<label for="cc_cid"><?php echo $this->__('Card Security Code') ?> </label><br />
+							<div class="v-fix">
+								<input type="text" title="<?php echo $this->__('Card Security Code') ?>"
+									   class="required-entry input-text validate-cc-cvn" id="CVV" name="CVV" style="width:3em;" value="" autocomplete="off" />
+							</div>
+							<a href="#" class="cvv-what-is-this"><?php echo $this->__('What\'s this?') ?></a>
+						</div>
+					</li>
+				</ul>
+			</fieldset>
+		</div>
+		<a href="<?php echo $this->__(Mage::helper('shift4payment')->enduserInfoUrl) ?>" id="columnRight" target="_blank">
+			<img src="<?php echo $this->__($this->getSkinUrl(Mage::helper('shift4payment')->imagei4Go)) ?>" alt="Shift4" width="113" height="86" />
+		</a>
+		<div class="clear"></div>
+
+		<?php if (Mage::helper('shift4payment')->isDemoMode()): ?>
+		<ul class="messages">
+			<li class="notice-msg">
+				<ul>
+					<li><?php echo $this->__('Demo mode enabled - live transactions will not be processed') ?></li>
+				</ul>
+			</li>
+		</ul>
+		<?php endif ?>
+
+		<h4 id="orderTotal">
+			<?php echo $this->__('Order Total: ' . $this->getOrder()->formatPrice($this->getOrder()->getGrandTotal())) ?>
+		</h4>
+
+		<button type="button" id="payButton" class="button left"><span><span><?php echo $this->__('Make Payment') ?></span></span></button>
+		<button type="button" id="cancelButton" class="button left"><span><span><?php echo $this->__('Cancel Order') ?></span></span></button>
+		<span id="pleaseWait">
+			<img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" class="v-middle" alt="" />
+			&nbsp;
+			<?php echo $this->__('Submitting payment information...') ?>
+		</span>
+
+		<div class="tool-tip" id="payment-tool-tip" style="display:none;">
+			<div class="btn-close">
+				<a href="#" id="payment-tool-tip-close"><img src="<?php echo $this->getSkinUrl('images/btn_window_close.gif') ?>" alt="<?php echo $this->__('Close') ?>" /></a>
+			</div>
+			<div class="block-content">
+				<img src="<?php echo $this->getSkinUrl('images/cvv.gif') ?>" alt="<?php echo $this->__('Card Verification Number Visual Reference') ?>" />
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var i4GoUrl				= '<?php echo $this->getApiSetting('i4GoUrl') ?>';
+		var i4GoAccountId		= '<?php echo $this->getApiSetting('i4GoAccountId') ?>';
+		var i4GoSiteId			= '<?php echo $this->getApiSetting('i4GoSiteId') ?>';
+		var baseUrl				= '<?php echo $this->__(Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, true)) ?>';
+
+		var responseApproved	= '<?php echo $this->__(Shift4_Shift4Payment_Model_PaymentMethod::RESPONSE_APPROVED) ?>';
+		var responsePartialAuth	= '<?php echo $this->__(Shift4_Shift4Payment_Model_PaymentMethod::RESPONSE_PARTIAL_AUTH) ?>';
+		var responseDeclined	= '<?php echo $this->__(Shift4_Shift4Payment_Model_PaymentMethod::RESPONSE_DECLINED) ?>';
+		var responseCardLimit	= '<?php echo $this->__(Shift4_Shift4Payment_Model_PaymentMethod::RESPONSE_CARD_LIMIT) ?>';
+		var responseError		= '<?php echo $this->__(Shift4_Shift4Payment_Model_PaymentMethod::RESPONSE_ERROR) ?>';
+	</script>
+	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/shift4payment/jquery.min.js') ?>"></script>
+	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/shift4payment/shift4payment.js') . '?' . rand() ?>"></script>
+
+<?php } else { ?>		
+	<ul class="messages">
+		<li class="error-msg">
+			<ul>
+				<li><?php echo $this->__('There was a problem with the order. We apologize for the inconvenience.') ?></li>
+			</ul>
+		</li>
+	</ul>
+<?php } ?>

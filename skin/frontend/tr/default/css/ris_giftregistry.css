@@ -1,0 +1,85 @@
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+.link-giftregistry { color:#dc6809 !important; font-weight:bold; }
+
+.block-giftregistry .block-title strong {  background-position:0 0; background-repeat:no-repeat; padding-left:21px; }
+
+/* Block: Gift Registry */
+.block-giftregistry .block-title strong { background-image:url(../images/ris_giftregistry/i_block-giftregistry.gif); }
+.block-giftregistry .actions { text-align:right; }
+.block-giftregistry .actions a { float:none; }
+
+/*List*/
+#giftregistry-table p { margin:0; }
+#giftregistry-table tr.even { background: #FFF; }
+#giftregistry-table td.last { vertical-align: middle; }
+#giftregistry-table span.expired { color: #EB340A }
+.gift-registry-expired { opacity: 0.7; }
+
+/* My Gift Registry */
+.gift-registry .data-table td { padding:10px; }
+.gift-registry .product-image { display:block; width:113px; height:113px; margin:0 0 5px; }
+.gift-registry .textarea { display:block; width:97%; max-width:97%; height:109px; }
+.gift-registry .buttons-set { margin-top:2em; }
+.gift-registry .buttons-set button.button { float:none; }
+.gift-registry .buttons-set .btn-add span,
+.gift-registry .buttons-set .btn-share span { border-color:#406a83; background:#618499; }
+#giftregistry-table .add-to-links { white-space:nowrap; }
+
+.customer-gift-registry-list .gift-registry-title { font-weight: bold; margin-bottom: 3px;}
+.customer-gift-registry-list .gift-registry-title.active a{ color: #D62502;}
+.customer-gift-registry-list .expanded { text-transform: capitalize; color: #D62502;}
+
+button.btn-giftregistry { margin-left: 15px; }
+
+
+/* Modals */
+.tlgr-overlay { position: fixed; z-index: 999999; top: 0; left: 0; width: 100%; height: 100%; background: url(../images/ris_giftregistry/overlay.png); }
+.tlgr-loader { position: fixed; z-index: 999999; top: 0; left: 0; width: 100%; height: 100%; background: url(../images/ris_giftregistry/loader.gif) no-repeat 50% 50%; }
+
+.tlgr-modal { position: fixed; z-index: 9999999; top: 50%; left: 50%; width: 546px; margin: -175px 0 0 -273px; padding: 25px; background: #FFF; color: #000; }
+.tlgr-modal-close { position: absolute; right: 25px; top: 25px; width: 18px; height: 18px; background: url(../images/ris_giftregistry/modal-close.png) no-repeat; }
+.tlgr-modal-title { margin-bottom: 25px; }
+.tlgr-modal-title h1 { font-weight: 600; font-size: 19px; line-height: 21px; }
+.tlgr-modal-title h2 { font-weight: 400; font-size: 16px; line-height: 20px; }
+.tlgr-modal-message { margin: 0 35px 10px 0; }
+.tlgr-modal-message .messages { }
+.tlgr-modal-message .messages li { margin: 0; padding: 0 0 0 50px; background-repeat: no-repeat; font-weight: 400; font-size: 16px; line-height: 20px; }
+.tlgr-modal-message .messages li li { margin: 0 !important; }
+.tlgr-modal-message .error-msg,
+.tlgr-modal-message .success-msg,
+.tlgr-modal-message .note-msg,
+.tlgr-modal-message .notice-msg { border: 0 !important; padding: 0 !important; background: none; padding: 0 0 0 50px; background-repeat: no-repeat; font-weight: 400; font-size: 16px; line-height: 20px; }
+.tlgr-modal-message .error-msg { background-image: url(../images/ris_giftregistry/error.jpg); }
+.tlgr-modal-message .success-msg { background-image: url(../images/ris_giftregistry/success.jpg); }
+.tlgr-modal-message .note-msg,
+.tlgr-modal-message .notice-msg { background-image: url(../images/ris_giftregistry/notice.jpg); }
+.tlgr-modal-message .error-msg span span,
+.tlgr-modal-message .success-msg span span,
+.tlgr-modal-message .note-msg span span,
+.tlgr-modal-message .notice-msg span span { display: block; font-weight: 600; font-size: 19px; line-height: 21px; }
+.tlgr-modal .fieldset { border:0; margin: 0; padding:0; font-size: 13px; line-height: 19px; }
+.tlgr-modal .form-list .fields { margin-bottom: 30px; }
+.tlgr-modal .form-list .field { width: auto; }
+.tlgr-modal .form-list .input-text,
+.tlgr-modal .form-list textarea { width: 524px; padding: 10px; border: 1px solid #DDDDDD; background: #F8F8F8; }
+.tlgr-modal .form-list .input-text { padding: 7px 10px; }
+.tlgr-modal .form-list textarea { height: 70px; }
+.tlgr-modal .form-list .tip { margin-top: 5px; color: #888; }
+.tlgr-modal .buttons-set { margin:0; border-top: 0; }
+.tlgr-modal .buttons-set button.button { float: left; margin: 0 10px 0 0; }
+
+.tlgr-modal .form-list .field.gift_registry_id { margin-bottom: 20px; }

@@ -1,0 +1,21 @@
+.slider {
+	position: relative;
+	height: 385px;
+	width: 1024px;
+}
+
+.slider .slide_control {
+	background: url('../images/slider_control_icons.png') no-repeat;
+	height: 55px;
+	position: absolute;
+	opacity: 0;
+	filter: alpha(opacity = 0); /*IE*/
+	top: 47%;
+	z-index: 999;
+	width:55px;
+}
+.slider .slide_control span { display: none; }
+.slider .prev_control { background-position: left 50%; left:-27px; }
+.slider .next_control { background-position: right 50%; right:-27px; }
+
+.slider ul { border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; list-style-type: none; overflow: hidden; }

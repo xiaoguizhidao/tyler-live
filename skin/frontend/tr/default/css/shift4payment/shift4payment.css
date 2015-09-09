@@ -1,0 +1,36 @@
+#shift4payment .payment-page-message { font-size: 14px; float: right; }
+#shift4payment .payment-page-message ol { list-style: decimal; }
+
+#shift4payment label { float: none; }
+#shift4payment button.disabled { display: none; }
+
+#shift4payment #columnLeft,
+#shift4payment #columnRight {
+	float: left;
+}
+#shift4payment #columnRight {
+	margin-left: 20px;
+}
+#shift4payment .clear {
+	clear: both;
+	padding-bottom: 7px;
+}
+#shift4payment #demoModeOn,
+#shift4payment #orderTotal,
+#shift4payment #partialAuthRemaining,
+#shift4payment #partialAuthCards {
+	padding-bottom: 7px;
+}
+#shift4payment #payButton,
+#shift4payment #cancelPartialAuthButton {
+	margin-right: 10px;
+}
+#shift4payment #pleaseWait {
+	display: none;
+	margin-left: 10px;	
+}
+#shift4payment #paymentMessages,
+#shift4payment #declinedMessage,
+#shift4payment #partialAuthMessage {
+	display: none;
+}

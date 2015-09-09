@@ -1,0 +1,12 @@
+<?xml version="1.0"?> 
+<config>
+    <translate>
+        <modules>
+            <Amasty_Conf>
+                <files>
+                    <default>Amasty_Defconf.csv</default>
+                </files>
+            </Amasty_Conf>
+        </modules>
+    </translate>
+</config> 

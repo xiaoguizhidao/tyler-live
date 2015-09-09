@@ -1,0 +1,61 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+$this->setLimit(6);
+
+$_category = Mage::registry('current_category');
+
+$blockTitle = (isset($_category) ? $this->__('More Ideas for %s', $_category->getName()) : $this->__('More Ideas'));
+
+?>
+
+<?php if($this->getItems()->getSize()): ?>
+<div class="block block-incategory">
+    <div class="block-title">
+        <strong><span><?php echo $blockTitle; ?></span></strong>
+    </div>
+    <div class="block-content">
+    <?php if($this->getItems()->getSize()): ?>
+        <ol class="row products-grid">
+        <?php $i=1; ?>
+        <?php foreach($this->getItems() as $_item): ?>
+            <li class="item col-lg-2<?php if($i % $this->_limit == 0) : ?> last<?php endif; ?>">
+                <div class="product">
+                    <a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_item->getName()) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_item, 'thumbnail')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(169) ?>" alt="<?php echo $this->htmlEscape($_item->getName()) ?>" /></a>
+                    <div class="product-details">
+                        <p class="product-name"><a href="<?php echo $_item->getProductUrl() ?>"><?php echo $this->htmlEscape($_item->getName()) ?></a></p>
+                        <?php echo $this->getPriceHtml($_item, true, '-related') ?>
+                    </div>
+                </div>
+            </li>
+        <?php $i++; endforeach ?>
+        </ol>
+        <script type="text/javascript">decorateList('block-related', 'none-recursive')</script>
+		<?php else : ?>    
+            <p class="empty"><?php echo $this->__('There are currently no related products to display.') ?></p>
+        <?php endif ?>
+    </div>
+</div>
+<?php endif ?>

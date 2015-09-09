@@ -1,0 +1,100 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_modern
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+
+$quote = Mage::getSingleton('checkout/cart')->getQuote();
+$subTotal =  $quote->getSubtotal();
+//$itemsAmount= $quote ->getItemsCount();
+?>
+
+<div class="header-container">
+    <div class="header">
+    	<div class="container header-links">
+            <section>
+            <div id="header-right" class="pull-right">
+                <div id="header-shop-functions">
+                    <ul class="list-inline top-header-links">                  
+                        <li class="top-account-links">
+                            <a class="parent-link my-account-link" href="<?php echo $this->getUrl('customer/account')?>"><span class="icon icon-user"></span><?php echo $this->__('My Account'); ?></a>
+                        </li> 
+                       <li> <?php echo $this->getChildHtml('topCart').__("Items"); ?></li>
+                        <li>
+                            <a href="#" style="color: black;font-size: 11px;margin-top: 5px;"><?php echo number_format($subTotal,2).__("$");?>
+                        </li>
+                    </ul>                
+                </div><!-- end #header-shop-functions -->
+            </div><!-- end #header-right -->
+            <?php echo $this->getChildHtml('header_links') ?>
+            <?php echo $this->getChildHtml('topLinks') ?>
+        </section>
+        </div>
+    	<div class="container header-brand">
+        <div id="lower-container">        
+            
+                <a id="logo" href="http://tylerstx.com/" title="<?php echo $this->getLogoAlt() ?>" rel="home" alt="Tyler's" title="Tyler's">
+                    <img src="<?php echo $this->getSkinUrl('images/logo.PNG') ?>" alt="<?php echo $this->getLogoAlt() ?>" />         
+                </a>
+          
+            
+            
+            <span id="login-updateContainer"> 
+        
+        <div id="searchbar"> <?php echo $this->getChildHtml('topSearch'); ?></div>
+     
+        </span>
+        <script>
+// var device_window=window.innerWidth;
+//  window.onload = function(){
+
+// if( device_window<501) {
+
+//  jQuery(".parentMenu a:first").attr("href","#").attr("rel","#");
+//     jQuery(".level0").attr("href","#").attr("rel","#");
+
+// }
+</script>
+<?php echo $this->getChildHtml('topMenu');?>
+        </div><!-- lower-container -->
+
+        </div><!-- .container -->
+      
+                <?php echo $this->getChildHtml('topContainer'); ?>
+               
+         
+    </div><!-- end .header -->
+</div><!-- end .header-container -->
+
+
+
+<div style="background-color:#000;width:100%;margin-top:-10px;">
+<p style="font-family: 'BebasNeue','Arial Narrow', Arial, 'Helvetica Condensed', Helvetica, sans-serif; font-weight:500;color:#fff; text-align:center;text-transform:uppercase;font-size: 22px;font-stretch: condensed;margin-top:20px;">
+free shipping on all orders over $50
+</p>
+</div>
+
+

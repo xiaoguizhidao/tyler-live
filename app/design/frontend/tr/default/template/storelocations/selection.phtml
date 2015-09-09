@@ -1,0 +1,38 @@
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('popup_welcome_text')->toHtml();?>
+<?php $coreSessionObj = Mage::getSingleton('core/session'); ?>
+<?php 
+$storeLevel = false;
+if($coreSessionObj->getStoreViewId() && $coreSessionObj->getStoreViewType() == 'pickup') 
+{ 
+    $storeDefault = Mage::getModel('storelocations/storelocations')->load($coreSessionObj->getStoreViewId());
+    if(is_object($storeDefault) && $storeDefault->getId()) {
+        $storeLevel = $storeDefault->getStoreOrderAvailability();
+    }
+}
+?>
+<form id="selection-filter">
+    <fieldset id="store_filter_selection">
+        <label name="options-filter-type"><?php echo $this->__('Please choose a shopping method:')?></label>
+        <div class="input-box">
+            <select id="options-filter-type" name="options-filter-type" class="required-entry select" onchange="changeOptionFilterType(this)">
+                <option value=""><?php echo $this->__('Select Shopping Preference'); ?></option>
+                <option value="shipto" <?php if(Mage::getSingleton('core/session')->getStoreViewType() == 'shipto') echo 'selected="selected"';?>><?php echo $this->__('Ship My Order'); ?></option>
+                <option value="pickup" <?php if(Mage::getSingleton('core/session')->getStoreViewType() == 'pickup') echo 'selected="selected"';?>><?php echo $this->__('Pickup at Store / Browse Online'); ?></option>
+            </select>
+        </div>
+    </fieldset>
+    <fieldset id="store_filter_option_2"></fieldset>
+    <fieldset id="store_filter_option_3"></fieldset>
+    <ul class="messages" <?php if($storeLevel != 1) :?>style="display:none"<?php endif;?> id="warning-store-msg">
+        <li class="notice-msg"><ul><li><span><?php echo Mage::getStoreConfig('storelocations/general/order_availability_msg', Mage::app()->getStore()->getId()); ?></span></li></ul></li>
+    </ul>
+    <span id="popup-loading-option" style="display: none"><img src="<?php echo $this->getSkinUrl('images/storelocations/ajax-loader.gif') ?>" alt="Loading..." /></span>
+    <fieldset class="buttons">
+	   <button class="button" onclick="setStoreLocation(); return false;" title="<?php echo $this->__('Continue'); ?>"><span><span><?php echo $this->__('Continue'); ?></span></span></button>
+    </fieldset>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var selectionFilter = new VarienForm('selection-filter', true);
+//]]>
+</script>

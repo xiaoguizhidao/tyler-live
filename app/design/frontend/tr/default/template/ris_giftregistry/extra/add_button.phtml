@@ -1,0 +1,30 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this RIS_GiftRegistry_Block_Extra */
+?>
+<?php $_product = $this->getProduct(); ?>
+<?php 
+//Get Product from parent Block
+/* 
+if(!$_product || !$_product->getId()){
+    $parentBlock = $this->getParentBlock();
+    if($parentBlock && $parentBlock->getProduct()) $this->setProduct($parentBlock->getProduct());
+} 
+*/
+?>
+<?php if ($this->helper('ris_giftregistry')->isAllow()) : ?>
+    <button type="button" title="<?php echo $this->__('Add to Gift Registry') ?>" class="button btn-giftregistry" onclick="GiftRegistry.AjaxModel.callAjax(this, '<?php echo $this->helper('ris_giftregistry')->getAjaxAddUrl($_product) ?>', false, false); return false;"><span><span><?php echo $this->__('Add to Gift Registry') ?></span></span></button>
+<?php endif; ?>

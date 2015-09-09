@@ -1,0 +1,68 @@
+<?php if (Mage::getStoreConfig('mygeneral/home/enable')) : ?>
+    <!--<div class="page-title section-title">
+	<h2><?php echo $this->__('Product Brands') ?></h2>
+    </div>-->
+    <div id="brand" class="itemslider" style="">
+	<?php foreach ($this->getAllManu() as $manufacturer): ?> 
+	    <div class="item">
+		<a href="<?php Mage::getURL() ?>catalogsearch/advanced/result/?manufacturer[]=<?php echo $manufacturer['value'] ?>">
+		    <?php $brandname = $manufacturer['label'] ?>
+		    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "brandlogo/" .$brandname . ".jpg"; ?>" /> 
+		    <?php // echo $manufacturer['label'] ?>
+		</a>
+	    </div>
+	<?php endforeach; ?>
+    </div>
+    <?php
+	$page = Mage::app()->getLayout()->getBlock('root')->getTemplate();
+	if ($page == "page/1column.phtml") {
+	    $page = 1;
+	}
+	elseif ($page == "page/2columns-left.phtml" || $page == "page/2columns-right.phtml") {
+	    $page = 2;
+	}	
+	elseif($page == "page/3columns.phtml") {
+	    $page = 3;		
+	}
+	else {
+	    $page = 0;
+	}
+    ?>
+    <script>
+	j$(document).ready(function() {
+	    j$("#brand").owlCarousel({
+		itemsCustom : [
+		   <?php if ($page == 1) : ?>
+		    [0, 1],
+		    [380, 1],
+		    [625, 3],
+		    [753, 5],
+		    [945, 6],
+		    [1265, 7],
+		    [1360, 7],
+		    [1440, 7],
+		    [1680, 7]
+		<?php elseif ($page == 2) : ?>
+		    [0, 1],
+		    [380, 2],
+		    [625, 3],
+		    [945, 4],
+		    [1265, 5],
+		    [1360, 5],
+		    [1440, 5],
+		    [1680, 5]
+		<?php elseif ($page == 3) : ?>
+		    [0, 1],
+		    [380, 2],
+		    [625, 3],
+		    [753, 2],
+		    [1265, 3],
+		    [1360, 3],
+		    [1440, 3],
+		    [1680, 3]
+		<?php endif; ?>
+		]<?php echo Mage::helper("ExtraConfig")->sliderSetting(); ?>
+	    });
+	});
+    </script>
+<?php endif; ?>

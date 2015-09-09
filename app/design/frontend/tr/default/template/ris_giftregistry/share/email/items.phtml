@@ -1,0 +1,80 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this RIS_GiftRegistry_Block_Share_Email_Items */
+?>
+<?php $l = $this->getGiftRegistryItemsCount() ?>
+<table cellspacing="0" cellpadding="0" border="0" width="650">
+    <tr>
+        <th width="75%">
+           <p align="left" style="margin-left: 15px; font-size:14px; text-align: left;"><strong><?php echo $this->__('"%s" Product(s)', $this->getGiftRegistry()->getTitle()) ?></strong></p> 
+        </th>
+        <th width="25%">
+           <p align="right" style="font-size:12px; text-align: right; margin-right: 15px;"><a href="<?php echo $this->getSharedUrl() ?>" style="color:#1E7EC8;"><strong><?php echo $this->__('View Gift Registry') ?></strong></a></p>             
+        </th>
+    </tr>
+</table>
+<div style="border:1px solid #E0E0E0; background:#EEEEEE;">
+<?php if($l):?>
+<table cellspacing="0" cellpadding="0" border="0" width="650">
+    <col width="2%"/>
+    <col width="18%" />
+    <col width="2%"/>
+    <col width="28%" />
+    <col width="2%" />
+    <col />
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+            <th><p style="font-size:12px; text-align: left;"><?php echo $this->__('Product Name') ?></p></th>
+            <th>&nbsp;</th>
+            <th><p style="font-size:12px; text-align: left;"><?php echo $this->__('Messages') ?></p></th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php $i = 0; foreach ($this->getGiftRegistryItems() as $item): $i++ ?>
+        <tr<?php if($i%2==0):?> style="background:#F9F9F9;"<?php else: ?> style="background:#FFFFFF;"<?php endif; ?>>
+            <td width="2%"></td>
+            <td width="18%">
+                <p align="center" style="font-size:12px;"><a href="<?php echo $this->getSharedUrl() ?>"><img src="<?php echo $this->helper('catalog/image')->init($item->getProduct(), 'small_image')->resize(113); ?>" style="border:1px solid #ccc;" width="113" height="113" alt="<?php echo $this->htmlEscape($item->getName()) ?>" /></a></p>
+            </td>
+            <td width="2%"></td>
+            <td width="28%">
+                <p style="font-size:12px; color:#4F8100;"><strong><?php echo $this->htmlEscape($item->getName()) ?></strong></p>
+            </td>
+            <td width="2%"></td>
+            <td width="48%">
+                <?php if($this->hasDescription($item)): ?><p style="font-size:12px; margin-right: 15px;"><?php echo $this->getEscapedDescription($item) ?></p><?php endif; ?>
+                <p style="font-size:12px; margin-right: 15px; display: none;">
+                    <a href="<?php echo $this->getProductUrl($item) ?>" style="color:#1E7EC8;"><?php echo $this->__('View Product') ?></a>
+                    <?php if ($item->getIsSalable()): ?> <small>|</small> <a href="<?php echo $this->getAddToCartUrl($item) ?>" style="color:#1E7EC8;"><strong><?php echo $this->__('Add to Cart') ?></strong></a><?php endif;?>
+                </p>
+            </td>
+        </tr>
+    <?php endforeach ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="5"><p  align="left" style="font-size:12px; margin-left: 15px; text-align: left;"><strong><?php echo $this->__('This Registry Expires on') ?></strong> <strong style="color: #FF0000;"><?php echo $this->getFormatedDate($this->getGiftRegistry()->getData('expires_on')); ?></strong></p></th>
+            <th><p align="right" style="font-size:12px; text-align: right; margin-right: 15px;"><a href="<?php echo $this->getSharedUrl() ?>" style="color:#1E7EC8;"><strong><?php echo $this->__('View Gift Registry') ?></strong></a></p></th>
+        </tr>
+    </tfoot>
+</table>
+<?php else: ?>
+    <p align="center" style="font-size:12px;"><?php echo $this->__('You have no items in your gift registry.') ?></p>
+<?php endif ?>
+</div>

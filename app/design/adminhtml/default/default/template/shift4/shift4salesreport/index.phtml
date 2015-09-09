@@ -1,0 +1,99 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category	Shift4
+ * @package		Shift4_Shift4Payment
+ * @copyright	Copyright (c) 2011 Shift4 Corporation (http://www.shift4.com)
+ * @license		http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+ ?>
+ <?php
+	$startDate = date('m/d/Y', strtotime(now()));
+	$endDate = date('m/d/Y', strtotime(now()));
+
+	if (isset($_GET) && !empty($_GET)) {
+		if(isset($_GET['report_from']) && isset($_GET['report_to'])) {
+			if(!empty($_GET['report_from']) && !empty($_GET['report_to'])) {
+					$startDate = $_GET['report_from'];
+					$endDate = $_GET['report_to'];
+			}
+		}
+
+		$startDateSql = date('Y-m-d 00:00:00', strtotime($startDate));
+		$endDateSql = date('Y-m-d 23:59:59', strtotime($endDate));
+		$this->runReports($startDateSql, $endDateSql);
+	}
+?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/shift4payment/jquery.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/shift4payment/jqgrid.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/shift4payment/salesreport.js') ?>"></script>
+<script type="text/javascript">
+	var salesGridData = '<?php echo(json_encode($this->_salesGridData)) ?>';
+	var statsGridData = '<?php echo(json_encode($this->_statsGridData)) ?>';
+	var timeoutsGridData = '<?php echo(json_encode($this->_timeoutsGridData)) ?>';
+</script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/shift4payment/jquery.ui.css') ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/shift4payment/jqgrid.css') ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/shift4payment/salesreport.css') ?>" />
+
+
+<div class="content-header">
+	
+	<table cellspacing="0">
+		<tr>
+			<td><h3 class="icon-head head-tag"><?php echo $this->__('Shift4 Sales Report'); ?></h3></td>
+		</tr>
+	</table>
+</div>
+
+<form action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" method="get" name="reportForm" id="reportForm">
+	<div class="f-left">
+		<div>
+			From:&nbsp;
+			<input type="text" readonly="readonly" class="input-text" id="report_from" name="report_from" value="<?php echo $startDate; ?>" style="width:6em" />&nbsp;&nbsp;
+		</div>
+	</div>
+	<div class="f-left">
+		<div>
+			To:&nbsp;
+			<input type="text" readonly="readonly" class="input-text" id="report_to" name="report_to"  value="<?php echo $endDate; ?>" style="width:6em" />&nbsp;&nbsp;
+		</div>
+	</div>
+	<button id="submit" type="submit" onclick="validator.validate();">Show Report</button>
+	<br />
+</form>
+
+<?php if (isset($_GET) && !empty($_GET)) { ?>
+<br />
+<div class="entry-edit">
+	<h3>Click on table headers to sort</h3>
+    <div class="entry-edit-head"><span class="title">Sales Report</span></div>
+    <div class="fieldset">
+    	<table id="salesGrid"></table>
+    	<div class="salesTotal">Grand Total: <?php echo $this->_salesTotal ?></div>
+    </div>
+	<br />
+    <div class="entry-edit-head"><span class="title">Statistics</span></div>
+    <div class="fieldset">
+    	<table id="statsGrid"></table>
+    	<div class="statsTotal">Grand Total: <?php echo $this->_salesTotal ?></div>
+    </div>
+	<br />
+    <div class="entry-edit-head"><span class="title">Timeout Report</span></div>
+    <div class="fieldset">
+    	<table id="timeoutsGrid"></table>
+    	<div class="timeoutsTotal">Grand Total: <?php echo $this->_timeoutsTotal ?></div>
+    </div>
+</div>
+<?php } ?>

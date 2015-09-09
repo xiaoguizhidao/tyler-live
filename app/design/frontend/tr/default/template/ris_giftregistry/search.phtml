@@ -1,0 +1,107 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Gift Registry Search page/form template
+ *
+ * @see RIS_GiftRegistry_Block_Search
+ */
+/* @var $this RIS_GiftRegistry_Block_Search */
+?>
+<div class="giftregistry-search">
+    <div class="page-title">
+        <h1><?php echo $this->__('Find a Registry') ?></h1>
+    </div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    
+    <?php echo $this->getChildHtml('result_list') ?>
+    
+    <div class="col2-set">
+        <div class="col-1 search-by-name">
+            <form action="<?php echo $this->getSearchResultUrl() ?>>" method="get" id="search-by-name-form">
+                <div class="block block-giftregistry-search">
+                    <div class="block-title">
+                        <h2><?php echo $this->__('Search by name') ?></h2>
+                        <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+                    </div>
+                    <div class="block-content">
+                        <ul class="form-list">
+                            <li>
+                                <label for="first_name"><?php echo $this->__('First Name') ?></label>
+                                <div class="input-box">
+                                    <input type="text" name="first_name" value="<?php echo $this->htmlEscape($this->getRequest()->getQuery('first_name')) ?>" id="first_name" class="input-text" title="<?php echo $this->__('First Name') ?>" />
+                                </div>
+                            </li>
+                            <li>
+                                <label for="last_name" class="required"><em>*</em><?php echo $this->__('Last Name') ?></label>
+                                <div class="input-box">
+                                    <input type="last_name" name="last_name" value="<?php echo $this->htmlEscape($this->getRequest()->getQuery('last_name')) ?>" class="input-text required-entry" id="last_name" title="<?php echo $this->__('Last Name') ?>" />
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="buttons-set">
+                            <button type="submit" class="button btn-orange" title="<?php echo $this->__('Search by name') ?>" name="search_name" id="btn_search_by_name"><span><span><?php echo $this->__('Search by name') ?></span></span></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <script type="text/javascript">
+            //<![CDATA[
+                var dataForm = new VarienForm('search-by-name-form', true);
+            //]]>
+            </script>
+        </div>
+        <div class="col-2 search-by-email">
+            <form action="<?php echo $this->getSearchResultUrl() ?>>" method="get" id="search-by-email-form">
+                <div class="block block-giftregistry-search">
+                    <div class="block-title">
+                        <h2><?php echo $this->__('Search by email address') ?></h2>
+                        <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+                    </div>
+                    <div class="block-content">
+                        <ul class="form-list">
+                            <li>
+                                <label for="email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
+                                <div class="input-box">
+                                    <input type="text" name="email" value="<?php echo $this->htmlEscape($this->getRequest()->getQuery('email')) ?>" id="email" class="input-text required-entry validate-email" title="<?php echo $this->__('Email Address') ?>" />
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="buttons-set">
+                            <button type="submit" class="button btn-orange" title="<?php echo $this->__('Search by email') ?>" name="search_email" id="btn_search_by_email"><span><span><?php echo $this->__('Search by email') ?></span></span></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <script type="text/javascript">
+            //<![CDATA[
+                var dataForm = new VarienForm('search-by-email-form', true);
+            //]]>
+            </script>
+        </div>
+    </div>
+</div>

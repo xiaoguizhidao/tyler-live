@@ -1,0 +1,39 @@
+<?php
+	$helper = Mage::helper('catalog/category');
+	$categories = $helper->getStoreCategories();
+?>
+
+<div class="category-list-grid">
+	
+    <div class="row">
+	<?php
+		$limit = 7;
+		$columns = 3;
+		$col = 12 / $columns;
+        $i = 1;
+		$count = $categories->count();
+        foreach($categories as $category) : 
+        if(!$category->getIsActive() && $children = $category->getChildren()) { continue; }
+		$_category = Mage::getModel('catalog/category')->load($category->getId());
+    ?>
+    
+        <div class="col-lg-<?php echo $col; ?> <?php echo $category->getUrl_key(); ?><?php echo ($_category->getThumbnail() ? ' has-thumbnail' : ''); ?>">
+        	<div class="category-list-content">
+			   <?php if($_category->getThumbnail()) : ?>
+
+                    <a href="<?php echo $helper->getCategoryUrl($category); ?>"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/category/'.$_category->getThumbnail(); ?>" alt="" class="category-thumbnail pull-left" /></a>
+                    <div class="catname"><h3><a class="catnametag" href="<?php echo $helper->getCategoryUrl($category); ?>"><?php echo $category->getName(); ?></a></h3></div>
+               <?php endif; ?>
+               
+            </div>
+        </div>
+        
+	<?php if($i % $columns == 0 || $count == $i) : ?>
+    </div><!-- end .row -->
+    <?php if($i < $count) : ?>
+    <div class="row">   
+    <?php endif; ?>    
+    <?php endif; ?>     
+	<?php $i++; endforeach; ?>    
+    
+</div>

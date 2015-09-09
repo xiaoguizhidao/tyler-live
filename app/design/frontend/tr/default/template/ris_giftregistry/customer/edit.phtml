@@ -1,0 +1,143 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+?>
+<?php
+/* @var $this RIS_GiftRegistry_Block_Customer_Giftregistry_Edit */
+
+// @see http://webdesignerwall.com/tutorials/cross-browser-html5-placeholder-text
+
+$page_title = $this->__('Create New Gift Registry');
+$btn_title = $this->__('Create Registry & Continue Shopping');
+
+if(!$this->isNew()){
+    $page_title = $this->__('Edit "%s" Gift Registry',$this->getFormData()->getTitle());
+    $btn_title = $this->__('Save Registry & Continue Shopping');
+}
+$page_title = $this->escapeHtml($page_title);
+$btn_title  = $this->escapeHtml($btn_title);
+
+?>
+<?php if ($this->helper('ris_giftregistry')->isAllow()) : ?>
+<div class="customer-gift-registry-edit<?php if($this->isNew()):?> customer-gift-registry-new<?php endif;?>">
+    <div class="page-title">
+        <div class="buttons-set-top-right title-buttons">
+            <button type="button" title="<?php echo $this->__('Cancel & Go Back') ?>" class="button" onclick="setLocation('<?php echo $this->escapeUrl($this->helper('ris_giftregistry')->getListUrl()) ?>')"><span><span><small>&laquo; </small><?php echo $this->__('Cancel & Go Back') ?></span></span></button>
+        </div>
+        <h1><?php echo $page_title ?></h1>
+    </div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+    <form id="gift-registry-edit-form" action="<?php echo $this->getSaveUrl() ?>" method="post">
+        <fieldset>
+            <?php echo $this->getBlockHtml('formkey')?>
+            <ul class="form-list container_12">
+                <li class="fields grid_8 alpha">
+                	<div class="field-row">
+                        <div class="grid_4 alpha">
+                            <label for="title" class="required"><em>*</em><?php echo $this->__('Your Registry Title') ?></label>
+                            <div class="input-box">
+                                <input type="text" title="<?php echo $this->__('Registry Title') ?>" name="title" value="<?php echo $this->htmlEscape($this->getFormData()->getTitle()) ?>" class="input-text required-entry" id="title" />
+                            </div>
+                        </div>
+                        <div class="field grid_4 omega">
+                            <label for="type" class="required"><em>*</em><?php echo $this->__('What type of event is this registry for?') ?></label>
+                            <div class="input-box">
+                                <select id="type" name="type" title="<?php echo $this->__('Registry type') ?>" class="validate-select">
+                                    <?php $options = Mage::getModel('ris_giftregistry/source_type')->toOptionArray();?>
+                                    <?php $value = $this->getFormData()->getType();?>
+                                    <?php foreach ($options as $option):?>
+                                        <option value="<?php echo $option['value'] ?>"<?php if ($option['value'] == $value) echo ' selected="selected"' ?>><?php echo $option['label'] ?></option>
+                                    <?php endforeach;?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="grid_4 alpha">
+                            <label class="required"><em>*</em><?php echo $this->__('Expiration date') ?></label>
+                            <div class="input-box input-type-date">
+                            <?php echo $this->getLayout()->createBlock('core/html_date')->setName('expires_on')
+                                        ->setId('expires_on')
+                                        ->setTitle($this->__('Expiration date'))
+                                        ->setValue($this->getFormData()->getExpiresOn() ? $this->formatDate($this->getFormData()->getExpiresOn(), Mage_Core_Model_Locale::FORMAT_TYPE_SHORT) : '')
+                                        ->setImage($this->getSkinUrl('images/calendar.gif'))
+                                        ->setFormat(Mage::app()->getLocale()->getDateStrFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT))
+                                        ->setClass('input-text required-entry')
+                                        //->setYearsRange('[' . $yearStart . ', ' . $yearEnd . ']'
+                                        ->getHtml(); ?>
+                            </div>
+                        </div>
+                        <div class="grid_4 omega">
+                            <label for="privacy_type" class="required"><em>*</em><?php echo $this->__('Select your privacy preference') ?></label>
+                            <div class="input-box">
+                                <select id="privacy_type" name="privacy_type" onchange="togglePrivacyPasswords();" title="<?php echo $this->__('Select your privacy preference') ?>" class="validate-select">
+                                    <?php $options = Mage::getModel('ris_giftregistry/source_privacy_type')->toOptionArray();?>
+                                    <?php $value = $this->getFormData()->getPrivacyType();?>
+                                    <?php foreach ($options as $option):?>
+                                        <option value="<?php echo $option['value'] ?>"<?php if ($option['value'] == $value) echo ' selected="selected"' ?>><?php echo $option['label'] ?></option>
+                                    <?php endforeach;?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row" id="gift-registry-privacy-password" style="display: none;">
+                        <div class="grid_4 alpha">
+                            <label for="password" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
+                            <div class="input-box">
+                                <input type="password" name="password" id="password" title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+                            </div>
+                        </div>
+                        <div class="grid_4 omega">
+                            <label for="confirm_password" class="required"><em>*</em><?php echo $this->__('Confirm Password') ?></label>
+                            <div class="input-box">
+                                <input type="password" name="confirm_password" title="<?php echo $this->__('Confirm Password') ?>" id="confirm_password" class="input-text required-entry validate-cpassword" />
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="grid_4 omega">
+                    <label for="description"><?php echo $this->__('Registry Description (optional)') ?></label>
+                    <div class="input-box">
+                        <textarea name="description" rows="3" cols="5" title="<?php echo $this->__('Registry Description') ?>"><?php echo $this->getFormData()->getDescription(); ?></textarea>
+                    </div>
+                </li>
+            </ul>
+            <div class="buttons-set buttons-set">
+                <button type="submit" title="<?php echo $btn_title ?>" onclick="this.name='do'" class="button btn-go"><span><span><?php echo $btn_title ?></span></span></button>
+            </div>
+        </fieldset>
+    </form>
+<script type="text/javascript">
+//<![CDATA[
+    var dataForm = new VarienForm('gift-registry-edit-form', true);
+
+    function togglePrivacyPasswords() {
+
+        var show_flag = ($('privacy_type').value == '<?php echo RIS_GiftRegistry_Model_Giftregistry::PRIVACY_TYPE_PASSWORD; ?>') ? 1 : 0; 
+        if($('gift-registry-privacy-password')){
+            if(show_flag){
+                $('gift-registry-privacy-password').show();
+            }else{
+                $('gift-registry-privacy-password').hide();
+            }
+        }
+    }
+    togglePrivacyPasswords();
+//]]>
+</script>
+</div>
+<?php endif ?>

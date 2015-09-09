@@ -1,0 +1,29 @@
+<form id="co-pickup-form" action="">
+    <script type="text/javascript">
+    //<![CDATA[
+        var pickupMethod = new Pickup('co-pickup-form', "<?php echo $this->getUrl('checkout/onepage/saveShippingMethod') ?>");
+    //]]>
+    </script>
+    
+    <input name="store_id" value="<?php echo Mage::helper('storelocations')->getPickupStoreId(); ?>" type="hidden">
+    
+    
+    <?php if($this->helper('storelocations')->getGoogleMapKey() != ''): ?> 
+        <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;key=<?php echo $this->helper('storelocations')->getGoogleMapKey();?>" type="text/javascript"></script>
+    <?php endif;?>
+    <div class="buttons-set pickup-buttons-set">
+        <h4><?php echo $this->__('Your order will be prepared to be picked up at a store.');?></h4>
+        <button type="button" class="button" onclick="checkoutStepChangePickup()"><span><span><?php echo $this->__('Change Shipping/Pickup Selection') ?></span></span></button>
+    </div>
+    <div id="checkout-pickup-load">
+        <?php echo $this->getChildHtml('pickup_info') ?>
+    </div>
+    <div class="buttons-set" id="pickup-buttons-container">
+        <p class="back-link"><a href="#" onclick="checkout.back(); return false;"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+        <button type="button" class="button" onclick="pickupMethod.save()"><span><span><?php echo $this->__('Continue') ?></span></span></button>
+        <span id="pickup-please-wait" class="please-wait" style="display:none;">
+            <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Loading next step...') ?>" title="<?php echo $this->__('Loading next step...') ?>" class="v-middle" /> <?php echo $this->__('Loading next step...') ?>
+        </span>
+    </div>
+    
+</form>

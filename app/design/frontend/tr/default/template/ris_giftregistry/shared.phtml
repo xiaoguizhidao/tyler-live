@@ -1,0 +1,139 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this RIS_GiftRegistry_Block_Shared_Giftregistry */
+?>
+<div class="gift-registry">
+    <div class="page-title">
+        <h1><?php echo $this->__('"%s" Gift Registry by %s', $this->escapeHtml($this->getGiftRegistry()->getTitle()), $this->getGiftRegistry()->getCustomer()->getName()) ?></h1>
+        <p class="sub-title" style="font-size: 12px;">
+            <span class="gift-registry-type-<?php echo $this->getGiftRegistry()->getType();?>"><?php echo $this->__('%s Registry', ucfirst($this->getGiftRegistry()->getType())) ?></span> <span class="separator">|</span> <span class="separator"><?php echo $this->__('Expires on %s', $this->getFormatedDate($this->getGiftRegistry()->getData('expires_on'))) ?></span>
+        </p>
+    </div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+    <?php if($this->getGiftRegistry()->getDescription()):?>
+    <p class="gift-registry-desc">
+        <span class="title" style="font-weight: bold;"><?php echo $this->__('Description') ?></span>
+        <br /><?php echo nl2br($this->escapeHtml($this->getGiftRegistry()->getDescription())) ?>
+    </p>
+    <?php endif; ?>
+    
+    <?php if ($this->hasGiftRegistryItems()): ?>
+    <form id="gift-registry-shared-list" action="<?php echo $this->getUrl('*/*/addItemsToCart', array('_current'=>true)) ?>" method="post">
+        <fieldset>
+            <h2><?php echo $this->__('Available Products') ?></h2>
+            <table class="data-table" id="giftregistry-table">
+            <col width="1" />
+            <col width="1" />
+            <col width="1" />
+            <col />
+            <col width="1" />
+            <col width="1" />
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" class="checkbox add_all_items" id="add_all_items" name="add_all_items" value="1" onchange="toggleAllItems();" />
+                    </th>
+                    <th>&nbsp;</th>
+                    <th><?php echo $this->__('Product Name') ?></th>
+                    <th><?php echo $this->__('Messages') ?></th>
+                    <th class="a-center"><span class="nobr"><?php echo $this->__('Unit Prices') ?></span></th>
+                    <th class="a-center"><span class="nobr"><?php echo $this->__('QTY') ?></span></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach($this->getGiftRegistryItems() as $item): ?>
+                <?php
+                    $product = $item->getProduct();
+                    $isVisibleProduct = $product->isVisibleInSiteVisibility();
+                ?>
+                <tr>
+                    <td>
+                    <?php if ($product->isSaleable() && $isVisibleProduct): ?>
+                        <input type="checkbox" id="add_item_<?php echo $item->getId() ?>" class="checkbox add_items" name="add_items[]" onchange="toggleMessageBox('<?php echo $item->getId() ?>');" value="<?php echo $item->getId() ?>" />
+                    <?php endif; ?>                        
+                    </td>
+                    <td>
+                        <a class="product-image" href="<?php echo $this->getProductUrl($item) ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>"><img src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(113, 113); ?>" width="113" height="113" alt="<?php echo $this->htmlEscape($product->getName()) ?>" /></a>
+                    </td>
+                    <td>
+                        <h2 class="product-name"><a href="<?php echo $this->getProductUrl($item) ?>"><?php echo $this->htmlEscape($product->getName()) ?></a></h2>
+                        <?php echo $this->getDetailsHtml($item) ?>
+                    </td>
+                    <td>
+                        <?php if($item->getDescription()):?>
+                            <p><?php echo $this->__('%s said: %s', $this->getGiftRegistry()->getCustomer()->getFirstname(), $this->getEscapedDescription($item)) ?></p>
+                        <?php endif; ?>
+                        <div id="gift-registry-message-box-<?php echo $item->getId() ?>" style="display: none;">
+                            <p><strong><?php echo $this->__('Leave a message:') ?></strong></p>
+                            <input type="text" class="input-text required-entry textarea" name="buyer_name[<?php echo $item->getId() ?>]" title="<?php echo $this->__('Name') ?>" value="<?php echo trim(Mage::getSingleton('customer/session')->getCustomer()->getName()); ?>" placeholder="<?php echo $this->__('Enter a name for this contribution ...') ?>"/>
+                            <textarea class="textarea" name="buyer_message[<?php echo $item->getId() ?>]" rows="3" cols="5" placeholder="<?php echo $this->__('Enter a message for %s...', $this->getGiftRegistry()->getCustomer()->getFirstname()); ?>" title="<?php echo $this->__('Comment') ?>"></textarea>
+                        </div>
+                    </td>
+                    <td class="a-right">
+                        <?php echo $this->getPriceHtml($product) ?>
+                    </td>
+                    <td class="a-center">
+                    <?php if ($product->isSaleable()): ?>
+                        <?php if ($item->canHaveQty() && $isVisibleProduct): ?>
+                            <p><input type="text" class="input-text qty" name="qty[<?php echo $item->getId() ?>]" value="<?php echo $this->getAddToCartQty($item) * 1 ?>" /></p>
+                        <?php endif; ?>
+                        <?php if ($isVisibleProduct && false): //hide single add to cart?>
+                            <button type="button" title="<?php echo $this->__('Add to Cart') ?>" onclick="setLocation('<?php echo $this->getSharedItemAddToCartUrl($item) ?>')" class="button btn-cart"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                        <?php endif ?>
+                    <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach ?>
+            </tbody>
+            </table>
+            <div class="buttons-set" style="float: left;">
+                <?php if($this->isSaleable()):?>
+                    <button type="submit" class="button btn-orange btn-add-sel-to-cart" title="<?php echo $this->__('Add Selected to Cart') ?>"><span><span><?php echo $this->__('Add Selected to Cart') ?></span></span></button>
+                <?php endif;?>
+            </div>
+            <script type="text/javascript">decorateTable('giftregistry-table');</script>
+        </fieldset>
+    </form>
+<script type="text/javascript">
+//<![CDATA[
+    var dataForm = new VarienForm('gift-registry-shared-list', true);
+    
+    function toggleAllItems() {
+        $$('.add_items').each(function(e){ 
+            e.checked = $('add_all_items').checked;
+            toggleMessageBox(e.value);
+
+        });
+    }
+    function toggleMessageBox(item_id) {
+        var show_flag = $('add_item_'+item_id).checked;
+        if($('gift-registry-message-box-'+item_id)){
+            if(show_flag){
+                $('gift-registry-message-box-'+item_id).show();
+            }else{
+                $('gift-registry-message-box-'+item_id).hide();
+            }
+            
+        }
+    }
+    toggleAllItems();
+//]]>
+</script>
+    <?php else: ?>
+        <p><?php echo $this->__('Gift Registry is empty now.') ?></p>
+    <?php endif ?>
+</div>

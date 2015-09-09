@@ -1,0 +1,24 @@
+# Dynamic data that doesn't need to be in the repo
+/.idea/
+/.idea/*
+/magmi/
+/magmi/*
+/var/
+/var/*
+/media/
+/media/*
+/media/catalog/
+/media/catalog/*
+/downloader/pearlib/cache/
+/downloader/pearlib/cache/*
+/downloader/pearlib/download/
+/downloader/pearlib/download/*
+/app/etc/use_cache.ser
+local.xml
+
+# Data specific to Magento's Install Location
+/app/etc/config.xml
+/app/etc/local.xml
+
+.htaccess.sample
+.htaccess

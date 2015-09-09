@@ -1,0 +1,360 @@
+<script type="text/javascript">
+//<![CDATA[
+
+    var sl_storeViewType = <?php echo Mage::helper('core')->jsonEncode(Mage::getSingleton('core/session')->getStoreViewType()); ?>;
+    var sl_pickupStoreCity = <?php echo Mage::helper('core')->jsonEncode(Mage::helper('storelocations')->getPickupStoreCity()); ?>;
+
+    function changeOptionFilterType(object, reset){
+        var option = (typeof object == 'string' ? object : $j(object).val());
+        
+        $j('#store_filter_option_3').html('');
+        $j('#store_filter_option_2').html('');
+        
+        if(typeof reset == 'undefined'){
+            reset = 1;
+        }
+        
+        if(option != '') {
+            if($j('#warning-store-msg').length > 0 && $j('#warning-store-msg').is(":visible")) {
+                $j('#warning-store-msg').hide()
+            }
+            if($j('#selection-filter .buttonsOption').length > 0 && $j('#selection-filter .buttonsOption').is(":visible")) {
+                $j('.warning-items-remove').hide();
+                $j('#selection-filter .buttons').show();
+                $j('#selection-filter .buttonsOption').hide();
+            }
+            
+            $j('#popup-loading-option').show();
+            $j.ajax({
+                url: "<?php echo $this->getUrl('storelocations/filter') ?>" + option,
+                type: "POST",
+                data: "reset=" + reset,
+                success: function(data) {
+                    $j('#popup-loading-option').hide();
+                    $j('#store_filter_option_2').html(data);
+                }
+            });
+        }
+    }
+    
+    function changeOptionFilterTypeInit(){
+        if(sl_storeViewType){
+            changeOptionFilterType(sl_storeViewType, 0);
+        }
+    }
+    
+    function changeState(object)
+    {
+        var option = (typeof object == 'string' ? object : $j(object).val());
+        if(option != '') {
+            if($j('#warning-store-msg').length > 0 && $j('#warning-store-msg').is(":visible")) {
+                $j('#warning-store-msg').hide()
+            }
+            if($j('#selection-filter .buttonsOption').length > 0 && $j('#selection-filter .buttonsOption').is(":visible")) {
+                $j('.warning-items-remove').hide();
+                $j('#selection-filter .buttons').show();
+                $j('#selection-filter .buttonsOption').hide();
+            }
+            
+            $j('#stores_drop_content').html('<span id="allstores-please-wait">'+
+                '<img src='+'"<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>"'
+                + ' alt="Loading ..." title="Loading ..." class="v-middle" /> Loading ...</span>');
+            
+            $j.ajax({
+                url: "<?php echo $this->getUrl('storelocations/index/getstores') ?>",
+                type: "POST",
+                data: "store_state="+option,
+                success: function(data) {
+                    $j('#stores_drop_content').html(data);
+                }
+            });
+        }
+    }
+    
+    function changeOptionFilterCityInit(){
+        if(sl_pickupStoreCity){
+            changeOptionFilterCity(sl_pickupStoreCity);
+        }
+    }
+    
+    function changeOptionFilterCity(object){
+        var option = (typeof object == 'string' ? object : $j(object).val());
+        
+        $j('#store_filter_option_3').html('');
+        if(option != '') {
+            if($j('#warning-store-msg').length > 0 && $j('#warning-store-msg').is(":visible")) {
+                $j('#warning-store-msg').hide()
+            }
+            if($j('#selection-filter .buttonsOption').length > 0 && $j('#selection-filter .buttonsOption').is(":visible")) {
+                $j('.warning-items-remove').hide();
+                $j('#selection-filter .buttons').show();
+                $j('#selection-filter .buttonsOption').hide();
+            }
+            $j('#popup-loading-option').show();
+            $j.ajax({
+                url: "<?php echo $this->getUrl('storelocations/filter/getstores') ?>",
+                type: "POST",
+                data: "store_city="+option,
+                success: function(data) {
+                    $j('#popup-loading-option').hide();
+                    $j('#store_filter_option_3').html(data);
+                }
+            });
+        }
+    }
+    
+    function checkStoreLevel(object) {
+        var option = $j(object).val();
+        if(option != '') {
+            $j('#popup-loading-option').show();
+            $j.ajax({
+                url: "<?php echo $this->getUrl('storelocations/filter/checkStoreLevel') ?>",
+                type: "POST",
+                data: "store_id="+option,
+                success: function(data) {
+                    $j('#popup-loading-option').hide();
+                    if(data) {
+                        $j('#warning-store-msg').show();
+                    }else{
+                        $j('#warning-store-msg').hide();
+                    }
+                }
+            });
+        }
+    }
+    
+    function setStoreLocation(){
+    
+        selectionFilter.validator.validate();
+        
+        <?php /*if($j('#store_zip_code').val()) {
+            if(!isValidPostalCode($j('#store_zip_code').val(),'<?php echo Mage::helper('core')->getDefaultCountry();?>')) {
+                $j('#store_zip_code').parent().append('<div style="" id="advice-required-entry-store_zip_code" class="validation-advice">This is a required field.</div>');
+                return false;
+            }
+        }*/ ?>
+    
+        if($j('#options-filter-type').val() && ($j('#store_zip_code').val() || $j('#option-filter-store').val()) ) {
+            $j('#popupStoreFilter .contentPopupStoreFilter').hide();
+            $j('#popup-loading').show();
+            var optionV = '';
+            var optionN = '';
+            if($j('#store_zip_code').val()) {
+                optionV = $j('#store_zip_code').val();
+                optionN = 'store_zip';
+            }else{
+                optionV = $j('#option-filter-store').val();
+                optionN = 'store_id';
+            }
+            $j.ajax({
+                url: "<?php echo $this->getUrl('storelocations/filter/setStore') ?>",
+                type: "POST",
+                data: optionN+"="+optionV,
+                success: function(data) {
+                    //$j('#popupStoreFilter').bPopup({disableClose: false}).close();
+                    //$j('#popupStoreFilter .contentPopupStoreFilter').show();
+                    //$j('#popup-loading').hide();
+                    $j('.mappingGeoLocationSelection-label').html(data);
+					
+					var openFlag = $j.urlParam('shippingSelection');
+						
+					if(openFlag == 1)
+					{
+						var queryParameters = {}, queryString = location.search.substring(1),
+							re = /([^&=]+)=([^&]*)/g, m;
+						while (m = re.exec(queryString)) {
+							queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+						}
+						delete queryParameters['shippingSelection'];						
+						location.search = $j.param(queryParameters);
+					}
+					else
+					{	
+						location.reload( true );
+					}
+					
+                }
+            });
+        }
+        return false;
+    }
+    
+    function setShippingLocation(optionReload)
+    {
+        selectionFilter.validator.validate();
+        
+        optionReload = optionReload !== undefined ? optionReload : 'continue';
+    
+        if(optionReload == 'cancel') {
+            $j('#popupChangeShippingFilter').bPopup({disableClose: false, position: [50, 'auto']},
+				function() {
+					$j('#popupStoreFilter').find('.bClose').hide();
+					$j('#popup-loading').hide();
+				}
+			).close();
+        }
+    
+        var check ;
+        if(optionReload != 'change'){
+            check = true;
+        }
+        
+        if(optionReload == 'change' && $j('#remove-items').hasClass('required-entry') && !$j('#remove-items').is(':checked')) {
+            return false;
+        }
+        
+    
+        if($j('#options-filter-type').val() && ($j('#store_zip_code').val() || $j('#option-filter-store').val())) {
+            //$j('#popupChangeShippingFilter .contentPopupChangeShippingFilter').hide();
+            //$j('#popupChangeShippingFilter #popup-loading').show();
+            $j('#popup-loading-option').show();
+            optionZip = $j('#store_zip_code').val();
+            optionStore = $j('#option-filter-store').val();
+            $j.ajax({
+                url: "<?php echo $this->getUrl('storelocations/filter/setShipping') ?>",
+                type: "POST",
+                data: { 'store_zip' : optionZip, 'store_id' : optionStore, 'check' : check},
+                dataType: 'json',
+                success: function(result) {
+                    
+                    if(result.selection_text) {
+                        //$j('#popupChangeShippingFilter').bPopup({disableClose: false}).close();
+                        //$j('#popupChangeShippingFilter .contentPopupChangeShippingFilter').show();
+                        //$j('#popupChangeShippingFilter #popup-loading').hide();
+                        
+                        if(result.remove_items_cart_link_after){
+                            $j('.top-link-cart').html(result.remove_items_cart_link_after);
+                            $j('.top-link-cart').attr('title', result.remove_items_cart_link_after);
+                        }
+                        if(result.notice_messages){
+                            $j('#opc-global-msg').html(result.notice_messages);
+                            setTimeout(function() {
+                                $j('#opc-global-msg .messages').fadeOut(1600);
+                            },10000);
+                        }
+                        
+                        $j('.mappingGeoLocationSelection-label').html(result.selection_text);
+                        
+                        if(typeof checkout !== "undefined" && result.goto_section){
+                            checkout.setStepResponse(result);
+                        }
+                        if(result.redirect_cart) {
+                            window.open('<?php echo $this->getUrl('checkout/cart') ?>','_parent');
+                        }
+                        $j('#popupChangeShippingFilter').bPopup({disableClose: false, position: [50, 'auto']},
+							function() {
+								$j('#popupStoreFilter').find('.bClose').hide();
+								$j('#popup-loading').hide();
+							}
+						).close();
+						
+						
+						
+                        return false;
+                    }else{
+                        $j('#popupChangeShippingFilter #popup-loading').hide();
+                        $j('#popup-loading-option').hide();
+                        
+                        if(result.remove_items > 0) {
+                            $j('#popupChangeShippingFilter .contentPopupChangeShippingFilter').show();
+                            $j('#warning-items-remove-msg').html(result.remove_items_text);
+                            $j('#remove-items').addClass("required-entry checkbox"); 
+                            $j('.warning-items-remove').show();
+                            $j('#selection-filter .buttons').hide();
+                            $j('#selection-filter .buttonsOption').show();
+                        }else{
+                            $j('#popupChangeShippingFilter .contentPopupChangeShippingFilter').show();
+                            $j('#warning-items-remove-msg').html('');
+                            $j('#remove-items').removeClass("required-entry checkbox"); 
+                            $j('.warning-items-remove').hide();
+                            $j('#selection-filter .buttons').hide();
+                            $j('#selection-filter .buttonsOption').show();
+                        }
+                    }
+                    //location.reload( true );
+                }
+            });
+        }
+        return false;
+    }
+    
+    function checkoutStepChangePickup()
+    {
+        $j('#popupChangeShippingFilter').bPopup({
+            onOpen: function(){ $j('#popupChangeShippingFilter #popup-loading').show(); },
+            content: 'ajax',
+            contentContainer:'.contentPopupChangeShippingFilter',
+            loadUrl: "<?php echo $this->getUrl('storelocations/filter/changeShipping') ?>",
+			position: [50, 'auto']
+        }, function() {
+            
+            changeOptionFilterTypeInit();
+            
+            if(sl_storeViewType == 'pickup') changeOptionFilterCityInit();
+            
+            $j('#popupChangeShippingFilter #popup-loading').hide();
+            
+            $j('#popupChangeShippingFilter .contentPopupChangeShippingFilter').show();
+        });
+    }
+	
+	$j.urlParam = function(name){
+		var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+		if (results==null){
+		   return null;
+		}
+		else{
+		   return results[1] || 0;
+		}
+	}
+    
+    $j(document).ready(function() {
+		
+        $j('#mappingGeoLocationSelection-btn').bind('click', function(e) {
+            e.preventDefault();
+
+            $j('#popupStoreFilter').bPopup({
+                    onOpen: function(){ $j('#popup-loading').show(); },
+                    content: 'ajax',
+                    contentContainer:'.contentPopupStoreFilter',
+                    loadUrl: "<?php echo $this->getUrl('storelocations/filter') ?>",
+					position: [50, 'auto']
+            }, function() {
+                $j('#popup-loading').hide();
+                
+                changeOptionFilterTypeInit();
+                
+                if(sl_storeViewType == 'pickup') changeOptionFilterCityInit();
+            });
+
+        });
+		
+		
+		var openFlag = $j.urlParam('shippingSelection');
+		if(openFlag == 1)
+		{
+			$j('#mappingGeoLocationSelection-btn').trigger('click');	
+		}
+        
+        <?php 
+        if(Mage::getSingleton('core/session')->getStoreViewType() == "") :
+            $routerName = Mage::app()->getRequest()->getRouteName();
+            $controllName = Mage::app()->getRequest()->getControllerName();
+            if(($routerName == 'catalog' && ($controllName == 'category' || $controllName == 'product')) || $routerName == 'product' || $routerName == 'catalogsearch') :
+            ?>
+                  $j('#popupStoreFilter').bPopup({
+                            onOpen: function(){ $j('#popup-loading').show(); },
+                            content: 'ajax',
+                            contentContainer:'.contentPopupStoreFilter',
+                            disableClose: true,
+                            loadUrl: "<?php echo $this->getUrl('storelocations/filter') ?>",
+							position: [50, 'auto']
+                    }, function() {
+						$j('#popupStoreFilter').find('.bClose').hide();
+                        $j('#popup-loading').hide();
+                    });  
+            <?php endif;?>
+        <?php endif;?>
+    });
+//]]>
+</script>

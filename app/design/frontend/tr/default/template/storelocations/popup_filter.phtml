@@ -1,0 +1,12 @@
+<div id="popupStoreFilter">
+    <span class="button bClose"><span>X</span></span>
+    
+    <div id="popupInformation">
+    	<?php echo $this->getChildHtml('shopping_preference_popup_content') ?>
+    </div>
+
+    <div class="contentPopupStoreFilter"></div>
+    <span id="popup-loading" style="display: none">
+        <img src="<?php echo $this->getSkinUrl('images/storelocations/ajax-loader.gif') ?>" alt="Loading..." />
+    </span>
+</div>

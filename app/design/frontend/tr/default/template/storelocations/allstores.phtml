@@ -1,0 +1,342 @@
+<?php $_helper = $this->helper('storelocations'); ?>
+<?php $regions = $this->getRegionStatesOptions(); ?>
+<?php $regionsStore = $this->getCurrentUsedRegions(); ?>
+<?php $regionsStoreCode = array(); ?>
+<?php $regionNames = $this->getRegionNames();?>
+<div id="all-stores">
+
+    <div class="page-title">
+        <h1><?php echo $this->__('Store Locations'); ?></h1>
+    </div>
+    <form action="<?php echo Mage::getUrl('storelocations') ?>" method="post" id="storelocations-form">
+    <div class="col2-set">
+        <div class="col-1 find-store">
+            <div class="content">
+        		<h2><?php echo $this->__('Find A Store Near You'); ?></h2>
+        		<p><?php echo $this->__('See all of the stores in your State or search by Zip Code to find the stores near to you.'); ?></p>
+                <ul class="form-list">
+                    <?php if($regions) : ?>
+                    <li>
+                        <label class="required" for="states"><em>*</em><?php echo $this->__('State'); ?></label>
+                        <div class="input-box">
+                            <select id="states" name="states" class="textfield">
+                                <option value=""><?php echo $this->__('Select a State'); ?></option>
+                                <?php foreach ($regions as $key => $value) : ?>
+                                <option value="<?php echo $value['value'];?>" <?php if($this->getStateId() == $value['value']) echo 'selected="selected"'?>>
+                                    <?php echo $this->__($value['label'])?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </li>
+                    <?php endif; ?>
+                    <li>
+                        <div><?php echo $this->__('Or'); ?></div>
+                    </li>
+                    <li>
+                        <label class="required" for="fromZip"><em>*</em><?php echo $this->__('Zip Code'); ?></label>
+                        <div class="input-box">
+                            <input type="text" value="" maxlength="50" id="fromZip" name="fromZip" class="input-text textfield">
+                        </div>
+                    </li>
+                    <li>
+                        <label class="required" for="radius"><em>*</em><?php echo $this->__('Search Radius'); ?></label>
+                        <div class="input-box">
+                            <select name="radius" id="radius">
+                                <option value="10"><?php echo $this->__('%s miles', 10); ?></option>
+                                <option value="25"><?php echo $this->__('%s miles', 25); ?></option>
+                                <option value="50"><?php echo $this->__('%s miles', 50); ?></option>
+                                <option value="100"><?php echo $this->__('%s miles', 100); ?></option>
+                            </select>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-2 find-store">
+            <div class="content">
+        		<h2><?php echo $this->__('Select a Store'); ?></h2>
+        		<p><?php echo $this->__('Choose one of our store locations below to find additional information on hours, location and events!'); ?></p>
+                <ul class="form-list">
+                    <?php if($regionsStore) : ?>
+                    <li>
+                        <label class="required" for="states_drop"><em>*</em><?php echo $this->__('State'); ?></label>
+                        <div class="input-box">
+                            <select id="states_drop" name="states_drop" onchange="changeState(this)" class="required-entry select" >
+                                <option value=""><?php echo $this->__('Select a State'); ?></option>
+                                <?php foreach ($regionsStore as $key => $value) : ?>
+                                <option value="<?php echo $value['value'];?>"><?php echo $this->__($value['label'])?></option>
+                                <?php $regionsStoreCode[$value['code']] = $value['value'];?>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <label class="required" for="stores_drop"><em>*</em><?php echo $this->__('Store'); ?></label>
+                        <div class="input-box" id="stores_drop_content">
+                            <select id="stores_drop" name="stores_drop">
+                                <option value=""><?php echo $this->__('Select a Store'); ?></option>
+                            </select>
+                        </div>
+                    </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col2-set">
+        <div class="col-1 find-store">
+            <div class="buttons-set">
+                <button onclick="submitStoreSearch();" class="button" title="Search" type="button"><span><span><?php echo $this->__('Search'); ?></span></span></button>
+            </div>
+        </div>
+        <div class="col-2 find-store">
+            <div class="buttons-set">
+                <button onclick="submitStoreSelect();" class="button" title="Search" type="button"><span><span><?php echo $this->__('Search'); ?></span></span></button>
+            </div>
+        </div>
+	</div>
+    
+        <?php if($this->getDefaultCountryId() == 'US' && !$this->isFilter()): ?>
+	<div class="stores-map">
+        <h3><?php echo $this->__('Click Your State'); ?></h3>
+        <p><?php echo $this->__('Click your state on the map to find a store near you.'); ?></p>
+
+        <img name="storelocation-map" src="<?php echo $this->getSkinUrl('images/storelocations/map.png'); ?>" width="810" height="500" id="storelocation-map" class="storelocation-map" usemap="#m_storelocation-map" alt="" />
+        <map name="m_storelocation-map" id="m_storelocation-map">
+            <?php $coordMap = $_helper->getUSMapCoordsRegions()?>
+            <?php foreach($coordMap as $code => $coord) :?>
+                <?php $storeInState= ''; ?>   
+                <?php $href = 'javascript:;';?>
+                <?php if(isset($regionsStoreCode[$code]) && $regionsStoreCode[$code]) {
+                    $storeInState= 'data-maphilight=\'{"fillColor":"F99B00","fillOpacity":0.6,"alwaysOn":true}\''; 
+                    $href = Mage::getUrl('storelocations/index/index/states/'.$regionsStoreCode[$code].'/');
+                }
+                ?> 
+                <?php if(is_array($coord)) : ?>
+                    <?php foreach($coord as $key => $subcoord) :?>
+                        <area shape="poly" coords="<?php echo $subcoord?>" href="<?php echo $href;?>" alt="<?php echo $code.$key?>" title="<?php echo (isset($regionNames[$code]) ? $regionNames[$code] : '') ?>" class="area-<?php echo $code.$key?>" <?php echo $storeInState?> />
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <area shape="poly" coords="<?php echo $coord?>" href="<?php echo $href;?>" alt="<?php echo $code?>" title="<?php echo (isset($regionNames[$code]) ? $regionNames[$code] : '') ?>" class="area-<?php echo $code?>" <?php echo $storeInState?>/>
+                <?php endif;?>
+            <?php endforeach; ?>
+        </map>
+        <?php endif; ?>
+        <?php if($this->isFilter()) : ?>
+        <div id="storeLocatorResults"> 
+            <?php $stores = $this->getResults();?>
+            <?php if(count($stores) == 0) : ?>
+		<div id="storeLocatorBlockContent">
+                    <br/><br/>
+                    <div class="page-title">
+                        <h1><?php echo $this->__('Results'); ?></h1>
+                    </div>
+                    <p><?php echo $this->__('The search gave no results'); ?></p>
+		</div>
+            <?php else :?>
+                <div id="storeLocatorBlockContent">
+                    
+                    <?php if($_helper->getGoogleMapKey() != '') :?> 
+                    <div class="google-map">
+                        <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;key=<?php echo $_helper->getGoogleMapKey();?>" type="text/javascript">
+                        </script>
+                        <script type="text/javascript">
+			var MAP;
+			var GEOCODER;
+			
+			var GOOGLE_MAP_DIV_ID = "GoogleMap_div";
+			var GOOGLE_MAP_CENTER_POINT = {"LATITUDE":0.0,"LONGITUDE":0.0};
+			
+			var GOOGLE_MAP_LAST_REQUEST_INFO;
+			var GOOGLE_MAP_LAST_REQUEST_MARKER_OPTIONS;
+			
+			var GOOGLE_MAP_DIRECTIONS_TO_CONTENT = "<div class=\'googleMapContainer\'><form action=\'http://maps.google.com/maps\' target=\'_blank\' method=\'get\'>Your Address:<br /><input type=\'text\' size=\'40\' maxlength=\'255\' name=\'saddr\' id=\'saddr\' value=\'\' /><input id=\'SUBMIT\' type=\'submit\' value=\'Get directions to here.\' class=\'form-button\' style=\'width:175px\'><input type=\'hidden\' name=\'daddr\' value=\'::DESTINATION_ADDRESS::\' /><input type=\'hidden\' name=\'hl\' value=\'en\' /></form></div>";
+			
+			var MAP;
+			
+			$j().ready( function () {
+				
+				if ( GBrowserIsCompatible() ) {
+					
+					var MAPSIZE = new GSize( width=437, height=400 )
+					MAP = new GMap2( container=document.getElementById( "GoogleMap_div" ), opts={ size: MAPSIZE } );
+					MAP.setCenter( new GLatLng( GOOGLE_MAP_CENTER_POINT.LATITUDE, GOOGLE_MAP_CENTER_POINT.LONGITUDE ), 13 );
+					
+					var customUI =  MAP.getDefaultUI();
+					customUI.controls.scalecontrol = false;
+					customUI.zoom.scrollwheel = true;
+					
+					customUI.maptypes.normal = true;
+					customUI.maptypes.satellite = true;
+					customUI.maptypes.hybrid = true;
+					customUI.maptypes.physical = true;
+					MAP.setUI(customUI);
+					 
+					GEOCODER = new GClientGeocoder();
+				}
+				
+				$j( "body" ).unload( function () {
+					GUnload();
+				});
+				
+			});
+			
+			$j().ready( function () {
+			
+                        <?php $str = "A"; ?>
+                        <?php  foreach($stores as $store) : ?>
+                            <?php 
+                            $addr = '<strong>'.$store->getStoreName().'</strong>'
+                            .'<br />'.$store->getStoreAddress()
+                            .($store->getStoreAddress2() != '' ? '<br/>'.$store->getStoreAddress2() : '')
+                            .'<br />'.$store->getStoreCity().', '
+                            .($store->getStoreStateId() != '' ? $_helper->getRegionCode($store->getStoreStateId()) : $store->getStoreState()).', '
+                            .$store->getStoreZipcode();
+                            ?>
+                            <?php $daddr = $store->getStoreAddress()
+                            .($store->getStoreAddress2() != '' ? ', '.$store->getStoreAddress2() : '')
+                            .', '.$store->getStoreCity().', '
+                            .($store->getStoreStateId() != '' ? $_helper->getRegionCode($store->getStoreStateId()) : $store->getStoreState()).', '
+                            .$store->getStoreZipcode();?>
+                            var point = new GLatLng(<?php echo $store->getStoreLat();?>,<?php echo $store->getStoreLong();?>);
+                            var markerIcon = new GIcon(G_DEFAULT_ICON);
+                            markerIcon.image = "http://www.google.com/mapfiles/marker<?php echo $str?>.png";
+                            markerOptions = { icon: markerIcon };
+                            var markerIcon_<?php echo $str?> = new GMarker(point,markerOptions);
+                            MAP.addOverlay( markerIcon_<?php echo $str?> );
+
+                            MAP.panTo( point );
+
+
+                            GEvent.addListener(markerIcon_<?php echo $str?>, "click", function() {
+                                //MAP.panTo( point );
+                                var addr = "<?php echo $addr?>";
+                                var daddr = "<?php echo $daddr?>";
+                                var info = GOOGLE_MAP_DIRECTIONS_TO_CONTENT.replace( /::DESTINATION_ADDRESS::/gi, daddr );
+                                markerIcon_<?php echo $str?>.openInfoWindowHtml( addr + "<br /><br />" + info );
+
+                            });			
+                            <?php $str = ++$str;?>
+                        <?php endforeach; ?>                                
+
+                        FitMapToMarkers(MAP);
+						
+                        function FitMapToMarkers(oMap) {
+                                var latlngbounds = new GLatLngBounds( );
+                                <?php  foreach($stores as $store) : ?> 
+                                    LatLon = new GLatLng(<?php echo $store->getStoreLat();?>,<?php echo $store->getStoreLong();?>);
+                                    latlngbounds.extend(LatLon);
+                                <?php endforeach; ?> 
+
+                                ZoomLevel = oMap.getBoundsZoomLevel( latlngbounds );
+                                if ( ZoomLevel > 15 ) { ZoomLevel = 15; }
+                                oMap.setCenter( latlngbounds.getCenter( ), ZoomLevel );
+                        }
+			
+                    });
+                    </script>
+                    <div id="GoogleMap_div"></div>
+                    </div>
+
+                    <h3>Our Stores</h3>
+                    <div id="storeBlock-container">
+                    <?php $str = "A"; ?>
+                    <?php foreach($stores as $store) : ?>
+                        <div class="storeBlock">
+                            <h5><?php echo $str.' - '.$store->getStoreName();?></h5>
+                            <?php echo $store->getStoreAddress();?>
+                            <?php if($store->getStoreAddress2() != ''): ?>
+                            <br/><?php echo $store->getStoreAddress2();?>
+                            <?php endif?>
+                            <br/> 
+                            <?php echo $store->getStoreCity(); ?>, 
+                            <?php 
+                            if($store->getStoreStateId() != '') 
+                                echo $_helper->getRegionCode($store->getStoreStateId()); 
+                            else 
+                                echo $store->getStoreState();
+                            ?> <?php echo $store->getStoreZipcode(); ?>
+                            <?php if($store->getStoreTelephone()) :?>
+                            <br/> <?php echo $store->getStoreTelephone();?>
+                            <?php endif;?>
+                            <br/>
+                            <a onclick="MAP.panTo(new google.maps.LatLng(<?php echo $store->getStoreLat();?>,<?php echo $store->getStoreLong();?>)); " href="javascript:void(0);" class="find-on-map">
+                                <?php echo $this->__('Find on Map');?>
+                            </a>
+                            <br/>
+                            <a href="<?php echo Mage::getUrl('storelocations/'.$store->getStoreUrl());?>" class="more-info">
+                                <strong><?php echo $this->__('More Info');?></strong>
+                            </a>
+                            <br/><br/>
+                        </div>
+                        <?php $str = ++$str;?>
+                    <?php endforeach; ?>
+                    </div>
+
+            </div>
+            <?php endif;?>
+            <?php endif;?>
+	</div>
+        <?php endif; ?>
+    </div>
+    <?php if($this->getDefaultCountryId() == 'US' && !$this->isFilter()): ?>
+    <?php if(count($regionsStoreCode) > 0 ) :?>
+    <div id="stateLinkContainer">
+        <h4>More Store Locations</h4>
+        <ul>
+            <?php foreach ($regionsStoreCode as $code => $id): ?>
+                <?php $href = Mage::getUrl('storelocations/index/index/states/'.$id.'/'); ?>
+                <li>
+                    <a href="<?php echo $href;?>" alt="<?php echo $regionNames[$code]; ?>" title="<?php echo $regionNames[$code]; ?>">
+                        <?php echo $regionNames[$code].$this->__(' Stores'); ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <div class="clear"></div>
+    </div>
+    <?php endif; ?>
+    <?php endif; ?>
+
+    </form>
+
+</div>
+
+ <script type="text/javascript">
+    //<![CDATA[
+        var dataForm = new VarienForm('storelocations-form', true);
+        
+        function submitStoreSearch()
+        {
+            $j('#states_drop').removeClass('required-entry select');
+            $j('#stores_drop').removeClass('required-entry select');
+            $j('#states').addClass('required-entry select');
+            $j('#fromZip').addClass('required-entry');
+             
+            if($j('#fromZip').val() != '' && $j('#radius').val() != '') {
+                $j('#states').val('');
+                $j('#states').removeClass('required-entry select');
+            } 
+             
+            if($j('#states').val() != '') { 
+                $j('#fromZip').val('');
+                $j('#fromZip').removeClass('required-entry');
+            }
+            
+            
+            dataForm.submit();
+        }
+        
+        function submitStoreSelect()
+        {
+            $j('#states_drop').addClass('required-entry select');
+            $j('#stores_drop').addClass('required-entry select');
+            $j('#states').removeClass('required-entry select');
+            $j('#fromZip').removeClass('required-entry');
+            
+            dataForm.submit();
+        }
+    //]]>
+</script>

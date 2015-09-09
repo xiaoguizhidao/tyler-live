@@ -1,0 +1,28 @@
+<?php
+/**
+ * RIS
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade GiftRegistry to newer
+ * versions in the future. If you wish to customize GiftRegistry for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Mind Magnet (http://www.mindmagnetsoftware.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for displaying giftregistry item price at rss feeds pages
+ *
+ * @var $this Mage_Catalog_Block_Product_Price
+ */
+?>
+<div class="price-box map-info">
+    <?php if ($this->helper('catalog')->canApplyMsrp($this->getProduct())): ?>
+        <a href="<?php echo $this->getProduct()->getProductUrl() ?>"><?php echo $this->__('Click for price'); ?></a>
+    <?php endif; ?>
+</div>

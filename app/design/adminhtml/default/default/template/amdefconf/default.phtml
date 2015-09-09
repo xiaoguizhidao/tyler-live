@@ -1,0 +1,21 @@
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Default Configurable Pre-Select'); ?></h4>
+    </div>
+    <div id="configurable_default" class="fieldset">
+        <div class="hor-scroll">
+            <table cellspacing="0" class="form-list">
+                <tbody>
+                <tr>
+                    <td class="label"><label for="simple_product_name">Default Simple Product ID</label></td>
+                    <td class="value">
+                        <input type="text" class=" input-text" value="<?php echo $this->getSelectedId(); ?>" name="default_configurable_preselect_id" id="default_configurable_preselect_id" />
+                        <p id="note_identifier" class="note"><span>This product will be automatically pre-selected on the configurable page at the frontend.</span></p>
+                    </td>
+                    <td class="scope-label"><span class="nobr"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
